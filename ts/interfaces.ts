@@ -17,6 +17,13 @@ enum LobbyStatusType {
     Closed
 }
 
+enum PlayerStatusType {
+    Online,
+    Setup,
+    Ready,
+    Offline
+}
+
 class vec2
 {
     x : number = 0;
@@ -25,7 +32,7 @@ class vec2
 
 class Player {
     name:string;
-    status:string;
+    status:PlayerStatusType;
 }
 
 interface PlayerAuth

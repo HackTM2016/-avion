@@ -3,14 +3,16 @@
 
 class GlobalDB {
     static dataRef: Firebase = new Firebase('https://project-4810418174258671406.firebaseio.com/')
-    static curPlayer: Player;
+    static curPlayer: Player = null
 }
 
 class PlayerAuthDB implements PlayerAuth {
     playerRef: Firebase = GlobalDB.dataRef.child("Players");
+    callback: (success : boolean) => void
     
     public login(name:string, callback: (success : boolean) => void) {
-        this.playerRef.once("value", function(snapshot) {
+        this.callback = callback
+        this.playerRef.transaction({name:name, status:PlayerStatusType.Online}, function(snapshot) {
             var playersData = snapshot;
             if (playersData)
             {
