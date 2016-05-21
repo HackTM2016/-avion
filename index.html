@@ -29,22 +29,28 @@
 
 <body bgcolor="#FFA200" onload="Game.prototype.Init()">
     
+<<<<<<< HEAD
     
     <div id="startup">
 	<img src="img/logo-white.png"><br>
 	<font class="username">Please enter an username:</font><br>
         <textarea name="playerName" class="usernameForm"></textarea><br>
         <button name="createGame" type="button" class="button">Create Game</button> <br>
+=======
+    <div id="startup" style="display: none;">
+        <textarea name="playerName"></textarea>
+        <button name="createGame" type="button" class="button">Create Game</button>
+>>>>>>> f62b63eb6c3f3e99207c546c815bfd393a622fbd
         <button name="joinGame" type="button" class="button">Join Game</button>
     </div> 
     
-    <div id="gameCreationForm" style="display: none;">
+    <div id="gameCreationForm" style="display: inline;">
         <table style="width:50%" align="center">
-        <tr><td>Game Name</td><td><input type="text" name="gameName" value="Avion"></td></tr>
-        <tr><td>Number of Teams</td><td><input type="text" name="teamsCount" value="2"></td></tr>
-        <tr><td>Player/Team</td><td><input type="text" name="teamSize" value="3"></td></tr>
-        <tr><td>Planes/Player</td><td><input type="text" name="planesCount" value="2"></td></tr>
-        <tr><td colspan="2" align="center"><button name="addGame" type="button">Add Game</button></td></tr>
+        <tr><td align="center"><input type="text" name="gameName" placeholder="Game Name" class="inputGame"></td></tr>
+        <tr><td align="center"><input type="text" name="teamsCount" placeholder="Number of Teams" class="inputGame"></td></tr>
+        <tr><td align="center"><input type="text" name="teamSize" placeholder="Number of Players/Team" class="inputGame"></td></tr>
+        <tr><td align="center"><input type="text" name="planesCount" placeholder="Number of Planes/Player" class="inputGame"></td></tr>
+        <tr><td align="center"><button name="addGame" type="button" class="button">Add Game</button></td></tr>
         </table>
     </div>
     
