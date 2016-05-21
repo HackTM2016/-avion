@@ -1,10 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    
     <!-- Load firebase db engine -->
     <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+	<script src='js/lodash.js'></script>
+    <script src='js/Player.js'></script>
+    <script src='js/Room.js'></script>
+    <script src='js/vec2.js'></script>
     <script src='js/db.js'></script>
     <!-- Load game/lobby engines -->
     <script src="js/game.js"></script>
@@ -13,29 +19,27 @@
     <script src="js/startup.js"></script>
     <script src="js/joinGame.js"></script>
     <script src="js/creategame.js"></script>
-    <!--<style>
-        th, td {
-            padding: 15px;
-        }
-    </style>-->
 </head>
 
-<body bgcolor="#29B6F6" onload="Startup.init()">
-    ツavion    
-    
+<body bgcolor="#FFA200" onload="Startup.init()">
     <div id="startup" hidden="true">
-        <input name="playerName" type="text"></textarea>
-        <button name="createGame" type="button">Create Game</button>
-        <button name="joinGame" type="button">Join Game</button>
+        
+        <div style="height: 30%; display:block; padding: 50px;">
+            <img src="img/logo-white.png" width="20%">
+        </div>
+	    <font class="username">Please enter an username:</font><br>
+        <textarea name="playerName" class="usernameForm"></textarea><br>
+        <button name="createGame" type="button" class="button">Create Game</button> <br>
+        <button name="joinGame" type="button" class="button">Join Game</button>
     </div> 
     
     <div id="gameCreationForm" hidden="true">
         <table style="width:50%" align="center">
-        <tr><td>Game Name</td><td><input type="text" name="gameName" value="Avion"></td></tr>
-        <tr><td>Number of Teams</td><td><input type="text" name="teamsCount" value="2"></td></tr>
-        <tr><td>Player/Team</td><td><input type="text" name="teamSize" value="3"></td></tr>
-        <tr><td>Planes/Player</td><td><input type="text" name="planesCount" value="2"></td></tr>
-        <tr><td colspan="2" align="center"><button name="addGame" type="button">Add Game</button></td></tr>
+        <tr><td align="center"><input type="text" name="gameName" placeholder="Game Name" class="inputGame"></td></tr>
+        <tr><td align="center"><input type="text" name="teamsCount" placeholder="Number of Teams" class="inputGame"></td></tr>
+        <tr><td align="center"><input type="text" name="teamSize" placeholder="Number of Players/Team" class="inputGame"></td></tr>
+        <tr><td align="center"><input type="text" name="planesCount" placeholder="Number of Planes/Player" class="inputGame"></td></tr>
+        <tr><td align="center"><button name="addGame" type="button" class="button">Add Game</button></td></tr>
         </table>
     </div>
     

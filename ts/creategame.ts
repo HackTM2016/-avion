@@ -5,16 +5,31 @@ class GameInfoModel
     constructor(public info){
         
     }
+    
+    GetGameInfo(info){
+        
+    }
+    
+    SetGameInfo(){
+        
+    }
 
 }
 
-
-interface CreateGameController
+class GameCreationController
 {
+    model: GameInfoModel;
+    
+    constructor(public gameModel){
+        this.model = gameModel;
+    }
+    AddNewGame(){
+        this.model.SetGameInfo
+    }
     
 }
 
-interface CreateGameView
+interface GameCreationView
 {
     
 }
