@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "none",
+        "sourceMap": true,
+        "outDir": "js"
+    },
+    "files": ["ts/test.ts"]
+}
