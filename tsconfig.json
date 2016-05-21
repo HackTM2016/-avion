@@ -10,6 +10,10 @@
         "ts/db.ts",
         "ts/lobby.ts",
         "ts/gameInfo.ts",
-        "ts/game.ts"
+        "ts/game.ts",
+        "ts/vec2.ts",
+        "ts/Room.ts",
+        "ts/Player.ts"
+        
     ]
 }
