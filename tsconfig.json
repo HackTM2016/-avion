@@ -10,6 +10,7 @@
         "ts/db.ts",
         
         "ts/game.ts",
+        "ts/gameutils.ts",
 
         "ts/startup.ts",
         "ts/joinGame.ts",
