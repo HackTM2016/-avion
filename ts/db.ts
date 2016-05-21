@@ -29,11 +29,9 @@ class Reader {
         this.dataRef.child('Rooms').limit(1).once("value", function(snapshot) {
             var roomsData = snapshot;
             var alertstring: string = "Init:";
-            if (!roomsData)
-                alertstring+="None";
-            else
+            if (roomsData)
                 roomsData.forEach( function(i) {
-                    alertstring+=i.key() + ": " + i.val().Status;
+                    var room = new Room();
                 });
             alert(alertstring.toString()); 
         });
