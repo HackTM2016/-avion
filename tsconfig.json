@@ -6,7 +6,8 @@
         "outDir": "js"
     },
     "files": [
-        "ts/test.ts", 
+        "ts/startup.ts", 
+        "ts/gameInfo.ts", 
         "ts/lobby.ts"
     ]
 }

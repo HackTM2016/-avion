@@ -4,13 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <script src="js/gameInfo.js"></script>
+    <script src="js/startup.js"></script>
     <script src="js/lobby.js"></script>
-    <script src="js/test.js"></script>
 </head>
 
-<body onload="test()">
+<body onload="Startup()">
     ツavion
     <div id="canvas"></div>
+    
+    
+    <div id="startup" hidden="true">
+        <textarea name="playerName"></textarea>
+        <button name="createGame" type="button">Create Game</button>
+        <button name="joinGame" type="button">Join Game</button>
+    </div> 
 </body>
 
 </html>
