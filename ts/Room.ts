@@ -1,4 +1,5 @@
 class Room{
+    name:string
     status:string;
     curNrPlayers:number;
     maxNrPlayers:number;
