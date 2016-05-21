@@ -1,12 +1,13 @@
-/// <reference path="gameInfo.ts"/>
-/// <reference path="gameInfoMock.ts"/>
+/// <reference path="interfaces.ts"/>
 /// <reference path="creategame.ts"/>
 /// <reference path="joinGame.ts"/>
+
+/// <reference path="interfacesMock.ts"/>
 
 class Startup
 {
     playerName: string = ""
-    playerDefinition: PlayerDefinitionModel = new PlayerDefinitionModelMock
+    playerAuth: PlayerAuth = new PlayerAuthMock
     div: HTMLElement = <HTMLElement>document.getElementById("startup")
 
     static init() : void {
@@ -28,13 +29,13 @@ class Startup
     }
     
     createGame(elem: HTMLButtonElement) : void {
-        this.playerDefinition.setPlayerName(
+        this.playerAuth.login(
             this.playerName,
             (s: boolean)=>{ this.createSelector(s, GameCreationMain) })
     }
     
     joinGame(elem: HTMLButtonElement) : void {
-        this.playerDefinition.setPlayerName(
+        this.playerAuth.login(
             this.playerName,
             (s: boolean)=>{ this.createSelector(s, JoinGameForm.init) })
     }

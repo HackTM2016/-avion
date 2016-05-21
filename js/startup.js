@@ -1,11 +1,11 @@
-/// <reference path="gameInfo.ts"/>
-/// <reference path="gameInfoMock.ts"/>
+/// <reference path="interfaces.ts"/>
 /// <reference path="creategame.ts"/>
 /// <reference path="joinGame.ts"/>
+/// <reference path="interfacesMock.ts"/>
 var Startup = (function () {
     function Startup() {
         this.playerName = "";
-        this.playerDefinition = new PlayerDefinitionModelMock;
+        this.playerAuth = new PlayerAuthMock;
         this.div = document.getElementById("startup");
     }
     Startup.init = function () {
@@ -23,11 +23,11 @@ var Startup = (function () {
     };
     Startup.prototype.createGame = function (elem) {
         var _this = this;
-        this.playerDefinition.setPlayerName(this.playerName, function (s) { _this.createSelector(s, GameCreationMain); });
+        this.playerAuth.login(this.playerName, function (s) { _this.createSelector(s, GameCreationMain); });
     };
     Startup.prototype.joinGame = function (elem) {
         var _this = this;
-        this.playerDefinition.setPlayerName(this.playerName, function (s) { _this.createSelector(s, JoinGameForm.init); });
+        this.playerAuth.login(this.playerName, function (s) { _this.createSelector(s, JoinGameForm.init); });
     };
     Startup.prototype.createSelector = function (success, move) {
         if (success) {
