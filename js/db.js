@@ -1,7 +1,6 @@
 /// <reference path="lib/firebase.d.ts"/>
-/// <reference path="Room.ts"/>
-/// <reference path="vec2.ts"/>
-/// <reference path="Player.ts"/>
+/// <reference path="lobby.ts"/>
+/// <reference path="player.ts"/>
 var Global = (function () {
     function Global() {
     }

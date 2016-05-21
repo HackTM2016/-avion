@@ -1,11 +1,10 @@
 /// <reference path="lib/firebase.d.ts"/>
-/// <reference path="Room.ts"/>
-/// <reference path="vec2.ts"/>
-/// <reference path="Player.ts"/>
+/// <reference path="lobby.ts"/>
+/// <reference path="player.ts"/>
 
 class Global {
     static players:Player[];
-    static rooms:Room[];
+    static rooms:Lobby[];
 }
 
 class Reader {

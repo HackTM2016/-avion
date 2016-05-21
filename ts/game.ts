@@ -1,3 +1,10 @@
+/// <reference path="lobby.ts"/>
+/// <reference path="player.ts"/>
+
+interface GameEvents {
+    onAttack(pos:vec2, effect: (coord:vec2, type:string, playerName : string) => void)
+}
+
 class Game {
     canvasLayer0: HTMLCanvasElement;
     contextLayer0: CanvasRenderingContext2D;
