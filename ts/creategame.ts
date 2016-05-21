@@ -20,3 +20,11 @@ interface CreateGameView
 }
 
 
+class CreateGameForm
+{
+    static init() : void {
+        var createGameForm = <HTMLElement>document.getElementById("gameCreationForm")
+        createGameForm.hidden = false
+    }
+}
+

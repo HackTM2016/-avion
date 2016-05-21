@@ -9,25 +9,27 @@
     <!-- Load game/lobby engines -->
     <script src="js/game.js"></script>
     <script src="js/gameInfo.js"></script>
+    <script src="js/gameInfoMock.js"></script>
     <script src="js/startup.js"></script>
-    <script src="js/lobby.js"></script>
-    <style>
-    th, td {
-        padding: 15px;
-    }
-</style>
+    <script src="js/joinGame.js"></script>
+    <script src="js/creategame.js"></script>
+    <!--<style>
+        th, td {
+            padding: 15px;
+        }
+    </style>-->
 </head>
 
-<body bgcolor="#29B6F6">
+<body bgcolor="#29B6F6" onload="Startup.init()">
     ツavion    
     
-    <div id="startup" hidden>
+    <div id="startup" hidden="true">
         <input name="playerName" type="text"></textarea>
         <button name="createGame" type="button">Create Game</button>
         <button name="joinGame" type="button">Join Game</button>
     </div> 
     
-    <div id="gameCreationForm" hidden>
+    <div id="gameCreationForm" hidden="true">
         <table style="width:50%" align="center">
         <tr><td>Game Name</td><td><input type="text" name="gameName" value="Avion"></td></tr>
         <tr><td>Number of Teams</td><td><input type="text" name="teamsCount" value="2"></td></tr>
@@ -37,7 +39,13 @@
         </table>
     </div>
     
-    <div id="canvases" style="position: relative;" hidden>
+    <div id="gameJoinForm" hidden="true">
+        <table style="width:80%" align="center">
+            <tr><td>Game Name</td><td>Number of Players</td><td>Planes/Player</td></tr>
+        </table>
+    </div>
+    
+    <div id="canvases" style="position: relative;" hidden="true">
         <canvas id="canvasLayer0" width="512" height="512" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
         <canvas id="canvasLayer1" width="512" height="512" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
     </div>

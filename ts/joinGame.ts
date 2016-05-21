@@ -1,42 +1,10 @@
 /// <reference path="gameInfo.ts"/>
 
-interface LobbyModel
+class JoinGameForm
 {
-    init(numberOfGames : number) : void
-    onAdd(callback: (item : GameInfo) => void) : void
-    onRemove(callback: (id: Identifier) => void) : void
-}
-
-interface GameCreator
-{
-    create(board : GameInfo, callback: (success : boolean) => void)
-    join(id : Identifier)
-}
-
-interface LobbyController
-{
-    
-}
-
-interface LobbyView
-{
-    
-}
-
-class TestLobbyModel implements LobbyModel
-{
-    init(numberOfGames : number) : void {
-        
-    }
-    onAdd(callback: (item : GameInfo) => void) : void {
-        
-    }
-    onRemove(callback: (id: Identifier) => void) : void {
-        
+    static init() : void {
+        var joinGameForm = <HTMLElement>document.getElementById("gameJoinForm")
+        joinGameForm.hidden = false
     }
 }
 
-function InitLobby() {
-    var lobbyModel : LobbyModel = new TestLobbyModel
-    
-}
