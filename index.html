@@ -28,23 +28,19 @@
 </head>
 
 <body bgcolor="#FFA200" onload="Game.prototype.Init()">
-    
-<<<<<<< HEAD
+   
     
     <div id="startup">
-	<img src="img/logo-white.png"><br>
+	<div style="height: 50%; display:block;">
+		<img src="img/logo-white.png" width="30%">
+	</div>
 	<font class="username">Please enter an username:</font><br>
         <textarea name="playerName" class="usernameForm"></textarea><br>
         <button name="createGame" type="button" class="button">Create Game</button> <br>
-=======
-    <div id="startup" style="display: none;">
-        <textarea name="playerName"></textarea>
-        <button name="createGame" type="button" class="button">Create Game</button>
->>>>>>> f62b63eb6c3f3e99207c546c815bfd393a622fbd
         <button name="joinGame" type="button" class="button">Join Game</button>
     </div> 
     
-    <div id="gameCreationForm" style="display: inline;">
+    <div id="gameCreationForm" style="display: none;">
         <table style="width:50%" align="center">
         <tr><td align="center"><input type="text" name="gameName" placeholder="Game Name" class="inputGame"></td></tr>
         <tr><td align="center"><input type="text" name="teamsCount" placeholder="Number of Teams" class="inputGame"></td></tr>
