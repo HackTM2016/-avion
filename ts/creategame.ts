@@ -2,10 +2,6 @@
 
 class GameInfoModel
 {
-    constructor(public info){
-        
-    }
-    
     GetGameInfo(info){
         
     }
@@ -24,14 +20,21 @@ class GameCreationController
         this.model = gameModel;
     }
     AddNewGame(){
-        this.model.SetGameInfo
+        var info = new GameInfo
+        //info.name = document.getElementsByName("gameName").item(0).getAttribute("value")
+        var input_name = <HTMLInputElement>document.getElementsByName("gameName").item(0)
+        var name = input_name.getAttribute("value")
+        info.numberOfTeams = +document.getElementsByName("numberOfTeams").item(0).getAttribute("value")
+        info.numberOfPlayersPerTeam = +document.getElementsByName("teamSize").item(0).getAttribute("value")
     }
     
 }
 
-interface GameCreationView
-{
-    
+
+function GameCreationMain() {
+    var creationForm = <HTMLElement>document.getElementById("gameCreationForm")
+    var model = new GameInfoModel()
+    var controller = new GameCreationController(model)
+    var addGame = <HTMLButtonElement>document.getElementsByName("addGame").item(0)
+    addGame.onclick = function() { controller.AddNewGame() }   
 }
-
-

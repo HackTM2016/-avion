@@ -10,6 +10,7 @@
     <script src='js/Room.js'></script>
     <script src='js/vec2.js'></script>
     <script src='js/db.js'></script>
+    <script src='js/creategame.js'></script>
     <!-- Load game/lobby engines -->
     <script src="js/game.js"></script>
     <script src="js/gameInfo.js"></script>
@@ -27,7 +28,7 @@
 </style>
 </head>
 
-<body bgcolor="#FFA200" onload="Game.prototype.Init()">
+<body bgcolor="#FFA200" onload="GameCreationMain()">
     ツavion    
     
     <div id="startup" style="display: none;">
@@ -37,7 +38,7 @@
     </div> 
     
     <div id="gameCreationForm" style="display: inline;">
-        <table style="width:50%" align="center">
+        <table style="width:50%" align="center" name="tableCreateGame">
         <tr><td align="center"><input type="text" name="gameName" placeholder="Game Name" class="inputGame"></td></tr>
         <tr><td align="center"><input type="text" name="teamsCount" placeholder="Number of Teams" class="inputGame"></td></tr>
         <tr><td align="center"><input type="text" name="teamSize" placeholder="Number of Players/Team" class="inputGame"></td></tr>

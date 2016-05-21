@@ -15,7 +15,8 @@
         "ts/game.ts",
         "ts/vec2.ts",
         "ts/Room.ts",
-        "ts/Player.ts"
+        "ts/Player.ts",
+        "ts/creategame.ts"
         
     ]
 }

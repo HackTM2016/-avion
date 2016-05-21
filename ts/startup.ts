@@ -28,7 +28,7 @@ function Startup() {
     var controller = new StartupController
     
     var createGame = <HTMLButtonElement>startup.children.namedItem("createGame")
-    createGame.onclick = controller.createGame
+    createGame.onclick = function() { controller.createGame() }
     
     var joinGame = <HTMLButtonElement>startup.children.namedItem("joinGame")
     joinGame.onclick = controller.joinGame

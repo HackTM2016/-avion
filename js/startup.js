@@ -22,7 +22,7 @@ function Startup() {
     //startup.hidden = false
     var controller = new StartupController;
     var createGame = startup.children.namedItem("createGame");
-    createGame.onclick = controller.createGame;
+    createGame.onclick = function () { controller.createGame(); };
     var joinGame = startup.children.namedItem("joinGame");
     joinGame.onclick = controller.joinGame;
 }
