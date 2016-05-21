@@ -56,7 +56,8 @@ input[type=text] {
     box-sizing: border-box;
     border: none;
     border-bottom: 2px solid #BDBDBD;
-    color: #BDBDBD;
+    color: #29B6F6;
+	outline: none;
 
 }
 
@@ -82,6 +83,14 @@ textarea.usernameForm {
 
 input:focus {
     ourline: none;
+}
+
+.inputGame {
+    font-family: "FiraSans";
+    font-size: 22px;
+    text-align: center;
+	font-weight: bold;
+	color: #29B6F6;
 }
 
 .inputGame::-webkit-input-placeholder {
