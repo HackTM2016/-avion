@@ -17,6 +17,14 @@ enum LobbyStatusType {
     Closed
 }
 
+var PlayerStatus = {
+    new : "new",
+    inRoom: "inRoom",
+    ready: "ready",
+    inGame: "inGame",
+    disconnected: "disconnected"    
+}
+
 class vec2
 {
     x : number = 0;

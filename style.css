@@ -1,7 +1,7 @@
 .button,
 .button:visited {
     font-family: "FiraSans";
-    width: 200px;
+    width: 320px;
     background-color: #ffffff;
     border: none;
     color: #29B6F6;
@@ -9,11 +9,11 @@
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 19px;
+    font-size: 27px;
     margin: 20px 20px;
-    -webkit-border-radius: 25px;
-    -moz-border-radius: 25px;
-    -o-border-radius: 25px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -o-border-radius: 100px;
     box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
     -webkit-transition: all 0.7s;
     -moz-transition: all 0.5s;
@@ -61,14 +61,21 @@ input[type=text] {
 }
 
 textarea.usernameForm {
-    width: 40%;
+	font-family:"FiraSans";
+	font-size:2em;
+	text-align:center;
+	color: #29B6F6;
+	font-weight: bold;
+    min-width: 40%;
+	width: 320px;
+	height: 65px;
+	outline: none;
     background: white;
     padding: 12px 20px;
     margin: 8px 0;
-    border-radius: 55px;
+    border-radius: 100px;
     box-sizing: border-box;
     border: none;
-    color: #BDBDBD;
     resize: none;
     box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
 }
@@ -100,6 +107,8 @@ input:focus {
 body {
     text-align: center;
     padding: 0px;
+	width: auto;
+	margin: 0;
 }
 
 .load-bar {
