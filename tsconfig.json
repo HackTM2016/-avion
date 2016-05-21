@@ -8,6 +8,8 @@
     "files": [
         "ts/startup.ts", 
         "ts/gameInfo.ts", 
-        "ts/lobby.ts"
+        "ts/lobby.ts",
+        "ts/game.ts",
+        "ts/db.ts"
     ]
 }
