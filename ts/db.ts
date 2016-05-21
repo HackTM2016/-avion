@@ -1,18 +1,16 @@
 /// <reference path="lib/firebase.d.ts"/>
-/// <reference path="lobby.ts"/>
-/// <reference path="player.ts"/>
+/// <reference path="interfaces.ts"/>
 
-class Global {
-    static players:Player[];
-    static rooms:Lobby[];
+class GlobalDB {
+    static dataRef: Firebase = new Firebase('https://project-4810418174258671406.firebaseio.com/')
+    static curPlayer: Player;
 }
 
-class Reader {
-    dataRef: Firebase;
-    public main() {
-        this.dataRef = new Firebase('https://project-4810418174258671406.firebaseio.com/');
-        var playerRef = new Firebase('https://project-4810418174258671406.firebaseio.com/Players');
-        playerRef.once("value", function(snapshot) {
+class PlayerAuthDB implements PlayerAuth {
+    playerRef: Firebase = GlobalDB.dataRef.child("Players");
+    
+    public login(name:string, callback: (success : boolean) => void) {
+        this.playerRef.once("value", function(snapshot) {
             var playersData = snapshot;
             if (playersData)
             {
@@ -20,12 +18,11 @@ class Reader {
                     var player = new Player();
                     player.name = i.key();
                     player.status = i.val().Status;
-                    Global.players.push(player);
                 });
             }
         });
         
-        this.dataRef.child('Rooms').limit(1).once("value", function(snapshot) {
+        GlobalDB.dataRef.child('Rooms').limit(1).once("value", function(snapshot) {
             var roomsData = snapshot;
             var alertstring: string = "Init:";
             if (!roomsData)
@@ -37,7 +34,11 @@ class Reader {
             alert(alertstring.toString()); 
         });
     }
+    
+    public logout() : void {
+        
+    }
 }
 
-var reader1 = new Reader();
-reader1.main();
+var reader1 = new PlayerAuthDB();
+//reader1.login();

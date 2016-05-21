@@ -1,12 +1,4 @@
-/// <reference path="lobby.ts"/>
-/// <reference path="player.ts"/>
-
-interface GameEvents {
-    init(onAttack: (coord:vec2, type:string, playerName : string) => void, 
-         onPlayerDrop: (playerName:string) => void, 
-         onGameChange: (status:string) => void)
-    shoot(pos:vec2, effect: (coord:vec2, type:string, playerName : string) => void) 
-}
+/// <reference path="interfaces.ts"/>
 
 class Game {
     canvasLayer0: HTMLCanvasElement;
