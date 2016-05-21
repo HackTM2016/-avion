@@ -4,6 +4,7 @@ type Identifier = string
 class GameInfo
 {
     name : string
-    numberOfPlayers : number
+    numberOfPlayersPerTeam : number
     sizeOfPlanesPerPlayer : number
+    numberOfTeams : number
 }

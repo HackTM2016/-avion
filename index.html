@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -15,19 +15,84 @@
     <script src="js/gameInfo.js"></script>
     <script src="js/startup.js"></script>
     <script src="js/lobby.js"></script>
-    <script src="js/lobby.js"></script>
+    <style>
+    th, td {
+        padding: 15px;
+    }
+
+    
+.button,
+.button:visited {
+    font-family: "FiraSans";
+    width: 200px;
+    background-color: #ffffff;
+    border: none;
+    color: #29B6F6;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 19px;
+    margin: 20px 20px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    -o-border-radius: 25px;
+    box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+    cursor: pointer;
+    cursor: hand;
+    outline: none;
+
+}
+
+.button:hover {
+    background: #29B6F6;
+    color: #ffffff;
+}
+
+@font-face {
+    font-family: "FiraSans";
+    src: url('fonts/FiraSans-Book.ttf') format('truetype');   
+}
+
+@font-face {
+    font-family: "FiraSans";
+    font-weight: strong;
+    src: url('fonts/FiraSans-Medium.ttf') format('truetype');   
+}
+
+@font-face {
+    font-family: "FiraSans";
+    font-weight: bold;
+    src: url('fonts/FiraSans-Heavy.ttf') format('truetype');   
+}
+
+</style>
 </head>
 
-<body bgcolor="#007FFF" onload="Game.prototype.Init()">
+<body bgcolor="#FFA200" onload="Game.prototype.Init()">
     ツavion    
     
-    <div id="startup" hidden="true">
+    <div id="startup" style="display: inline;">
         <textarea name="playerName"></textarea>
-        <button name="createGame" type="button">Create Game</button>
-        <button name="joinGame" type="button">Join Game</button>
+        <button name="createGame" type="button" class="button">Create Game</button>
+        <button name="joinGame" type="button" class="button">Join Game</button>
     </div> 
     
-    <div style="position: relative;">
+    <div id="gameCreationForm" style="display: none;">
+        <table style="width:50%" align="center">
+        <tr><td>Game Name</td><td><input type="text" name="gameName" value="Avion"></td></tr>
+        <tr><td>Number of Teams</td><td><input type="text" name="teamsCount" value="2"></td></tr>
+        <tr><td>Player/Team</td><td><input type="text" name="teamSize" value="3"></td></tr>
+        <tr><td>Planes/Player</td><td><input type="text" name="planesCount" value="2"></td></tr>
+        <tr><td colspan="2" align="center"><button name="addGame" type="button">Add Game</button></td></tr>
+        </table>
+    </div>
+    
+    <div id="canvases" style="position: relative;" style="display: none;" hidden>
         <canvas id="canvasLayer0" width="512" height="512" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
         <canvas id="canvasLayer1" width="512" height="512" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
     </div>
