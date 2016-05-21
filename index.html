@@ -3,14 +3,20 @@
 
 <head>
     <meta charset="UTF-8">
+    <!-- Load firebase db engine -->
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='js/db.js'></script>
+    <!-- Load game/lobby engines -->
+    <script src="js/game.js"></script>
     <script src="js/gameInfo.js"></script>
     <script src="js/lobby.js"></script>
-    <script src="js/test.js"></script>
 </head>
 
-<body onload="test()">
-    ツavion
-    <div id="canvas"></div>
+<body bgcolor="#007FFF" onload="Game.prototype.Init()">
+    <div style="position: relative;">
+        <canvas id="canvasLayer0" width="512" height="512" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+        <canvas id="canvasLayer1" width="512" height="512" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+    </div>
 </body>
 
 </html>
