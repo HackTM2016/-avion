@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -15,16 +15,67 @@
     th, td {
         padding: 15px;
     }
+
+    
+.button,
+.button:visited {
+    font-family: "FiraSans";
+    width: 200px;
+    background-color: #ffffff;
+    border: none;
+    color: #29B6F6;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 19px;
+    margin: 20px 20px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    -o-border-radius: 25px;
+    box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+    cursor: pointer;
+    cursor: hand;
+    outline: none;
+
+}
+
+.button:hover {
+    background: #29B6F6;
+    color: #ffffff;
+}
+
+@font-face {
+    font-family: "FiraSans";
+    src: url('fonts/FiraSans-Book.ttf') format('truetype');   
+}
+
+@font-face {
+    font-family: "FiraSans";
+    font-weight: strong;
+    src: url('fonts/FiraSans-Medium.ttf') format('truetype');   
+}
+
+@font-face {
+    font-family: "FiraSans";
+    font-weight: bold;
+    src: url('fonts/FiraSans-Heavy.ttf') format('truetype');   
+}
+
 </style>
 </head>
 
-<body bgcolor="#29B6F6" onload="Game.prototype.Init()">
+<body bgcolor="#FFA200" onload="Game.prototype.Init()">
     ツavion    
     
     <div id="startup" style="display: none;">
         <textarea name="playerName"></textarea>
-        <button name="createGame" type="button">Create Game</button>
-        <button name="joinGame" type="button">Join Game</button>
+        <button name="createGame" type="button" class="button">Create Game</button>
+        <button name="joinGame" type="button" class="button">Join Game</button>
     </div> 
     
     <div id="gameCreationForm" style="display: inline;">
