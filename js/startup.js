@@ -2,6 +2,7 @@
 /// <reference path="creategame.ts"/>
 /// <reference path="joinGame.ts"/>
 /// <reference path="interfacesMock.ts"/>
+/// <reference path="game.ts"/>
 var Startup = (function () {
     function Startup() {
         this.playerName = "";
@@ -9,6 +10,11 @@ var Startup = (function () {
         this.div = document.getElementById("startup");
     }
     Startup.init = function () {
+        var game = new Game;
+        game.Init();
+        if (game != null) {
+            return;
+        }
         var startup = new Startup;
         startup.div.style.display = "block";
         var playerName = startup.div.children.namedItem("playerName");
