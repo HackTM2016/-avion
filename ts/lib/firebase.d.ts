@@ -2,6 +2,7 @@
 // Project: https://www.firebase.com/docs/javascript/firebase
 // Definitions by: Vincent Botone <https://github.com/vbortone/>, Shin1 Kashimura <https://github.com/in-async/>, Sebastien Dubois <https://github.com/dsebastien/>, Szymon Stasik <https://github.com/ciekawy/>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+/// <reference path="es6-promise.d.ts"/>
 
 interface FirebaseAuthResult {
 	auth: any;

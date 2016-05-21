@@ -1,10 +1,13 @@
 /// <reference path="lib/firebase.d.ts"/>
+/// <reference path="lib/lodash.d.ts"/>
 /// <reference path="Room.ts"/>
 /// <reference path="vec2.ts"/>
 /// <reference path="Player.ts"/>
 var Global = (function () {
     function Global() {
     }
+    Global.players = [];
+    Global.rooms = [];
     return Global;
 }());
 var Reader = (function () {
@@ -20,6 +23,7 @@ var Reader = (function () {
                     var player = new Player();
                     player.name = i.key();
                     player.status = i.val().Status;
+                    player.toString();
                     Global.players.push(player);
                 });
             }
@@ -27,12 +31,25 @@ var Reader = (function () {
         this.dataRef.child('Rooms').limit(1).once("value", function (snapshot) {
             var roomsData = snapshot;
             var alertstring = "Init:";
-            if (!roomsData)
-                alertstring += "None";
-            else
+            if (roomsData) {
                 roomsData.forEach(function (i) {
-                    alertstring += i.key() + ": " + i.val().Status;
+                    var room = new Room();
+                    room.name = i.key();
+                    room.status = i.val().Status;
+                    room.curNrPlayers = i.val().CurNrPlayers;
+                    room.curNrPlayers = i.val().CurNrPlayers;
+                    //room.mapSize.x = i.val().MapSize.val().x;
+                    //room.mapSize.y = i.val().MapSize.val().y;
+                    room.maxNrPlayers = i.val().MaxNrPlayer;
+                    console.log("Sert");
+                    console.log(i.val().Players);
+                    console.log("Mert");
+                    //console.log(i.val());
                 });
+                _.each(roomsData, function (room) {
+                    console.log('Room details: ' + JSON.stringify(room, null, 2));
+                });
+            }
             alert(alertstring.toString());
         });
     };
