@@ -34,7 +34,7 @@ class GameInfo extends Lobby
 
 interface JoinGame
 {
-    init(numberOfLobbies : number) : void
+    constructor(numberOfLobbies : number) : void
     onAdd(callback: (item : GameInfo) => void) : void
     onRemove(callback: (name : string) => void) : void 
     join(name : string, joined: (success : boolean) => void, startGame: (game : GameInfo) => void) : void
@@ -57,8 +57,8 @@ interface LobbyView
 
 class TestLobbyModel implements JoinGame
 {
-    init(numberOfGames : number) : void {
-        
+    constructor(numberOfGames : number) {
+
     }
     onAdd(callback: (item : GameInfo) => void) : void {
         
@@ -72,6 +72,6 @@ class TestLobbyModel implements JoinGame
 }
 
 function InitLobby() {
-    var lobbyModel : JoinGame = new TestLobbyModel()
+    var lobbyModel : JoinGame = new TestLobbyModel(10)
     
 }
