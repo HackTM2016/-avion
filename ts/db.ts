@@ -1,6 +1,11 @@
 /// <reference path="lib/firebase.d.ts"/>
-interface Room{
-    Status:string;
+/// <reference path="Room.ts"/>
+/// <reference path="vec2.ts"/>
+/// <reference path="Player.ts"/>
+
+class Global {
+    static players:Player[];
+    static rooms:Room[];
 }
 
 class Reader {
