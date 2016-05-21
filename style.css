@@ -144,3 +144,60 @@ body {
     33.3333% {left: 0; width: 100%;z-index: 10;}
     to {left: 0; width: 100%;}
 }
+
+.gameCreation {
+	background: white;
+	box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+	-webkit-border-radius: 35px;
+    -moz-border-radius: 35px;
+    -o-border-radius: 35px;
+	padding: 40px;
+}
+
+.createScreen {
+	font-family: "FiraSans";
+    font-size: 45px;
+    color: #FFA200;
+	font-weight: bold;
+}
+
+.buttonAdd,
+.buttonAdd:visited {
+	 font-family: "FiraSans";
+    width: 320px;
+    background-color: #29B6F6;
+    border: none;
+    color: #ffffff;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 27px;
+    margin: 20px 20px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -o-border-radius: 100px;
+    box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+    cursor: pointer;
+    cursor: hand;
+    outline: none;
+}
+
+.buttonAdd:hover {
+    background: #FFA200;
+    color: #ffffff;
+}
+
+.gameJoin {
+	background: white;
+	box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+	width: 50%;
+	-webkit-border-radius: 35px;
+    -moz-border-radius: 35px;
+    -o-border-radius: 35px;
+	padding: 40px;
+}
