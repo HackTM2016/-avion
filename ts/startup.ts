@@ -7,23 +7,20 @@ class Startup
 {
     playerName: string = ""
     playerDefinition: PlayerDefinitionModel = new PlayerDefinitionModelMock
-    div: HTMLElement
+    div: HTMLElement = <HTMLElement>document.getElementById("startup")
 
     static init() : void {
-        var startup = <HTMLElement>document.getElementById("startup")
-        startup.hidden = false
+        var startup = new Startup
+        startup.div.style.display = "block";
         
-        var controller = new Startup
-        controller.div = startup
+        var playerName = <HTMLInputElement>startup.div.children.namedItem("playerName")
+        playerName.onclick = function () { startup.changeName(this) }
         
-        var playerName = <HTMLInputElement>startup.children.namedItem("playerName")
-        playerName.onclick = function () { controller.changeName(this) }
+        var createGame = <HTMLButtonElement>startup.div.children.namedItem("createGame")
+        createGame.onclick = function () { startup.createGame(this) }
         
-        var createGame = <HTMLButtonElement>startup.children.namedItem("createGame")
-        createGame.onclick = function () { controller.createGame(this) }
-        
-        var joinGame = <HTMLButtonElement>startup.children.namedItem("joinGame")
-        joinGame.onclick = function () { controller.joinGame(this) }
+        var joinGame = <HTMLButtonElement>startup.div.children.namedItem("joinGame")
+        joinGame.onclick = function () { startup.joinGame(this) }
     }
     
     changeName(elem: HTMLInputElement) : void {
@@ -33,33 +30,23 @@ class Startup
     createGame(elem: HTMLButtonElement) : void {
         this.playerDefinition.setPlayerName(
             this.playerName,
-            this.createSelector(this.moveToCreate));
+            (s: boolean)=>{ this.createSelector(s, CreateGameForm.init) })
     }
     
     joinGame(elem: HTMLButtonElement) : void {
         this.playerDefinition.setPlayerName(
             this.playerName,
-            this.createSelector(this.moveToJoin));
+            (s: boolean)=>{ this.createSelector(s, JoinGameForm.init) })
     }
     
-    createSelector(move: () => void) : any {
-        return (success: boolean) => {
-            if (success) {
-                this.div.hidden = true;
-                move()
-            }
-            else {
-                alert("wrong name");
-            }
+    createSelector(success: boolean, move: () => void) : any {
+        if (success) {
+            this.div.style.display = "none";
+            move()
         }
-    }
-    
-    moveToCreate() : void {
-        CreateGameForm.init()
-    }
-    
-    moveToJoin() : void {
-        JoinGameForm.init();
+        else {
+            alert("wrong name");
+        }
     }
 }
 

@@ -4,7 +4,7 @@ class JoinGameForm
 {
     static init() : void {
         var joinGameForm = <HTMLElement>document.getElementById("gameJoinForm")
-        joinGameForm.hidden = false
+        joinGameForm.style.display = "block"
     }
 }
 
