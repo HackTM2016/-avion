@@ -30,7 +30,7 @@ class Startup
     createGame(elem: HTMLButtonElement) : void {
         this.playerDefinition.setPlayerName(
             this.playerName,
-            (s: boolean)=>{ this.createSelector(s, CreateGameForm.init) })
+            (s: boolean)=>{ this.createSelector(s, GameCreationMain) })
     }
     
     joinGame(elem: HTMLButtonElement) : void {

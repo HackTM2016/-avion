@@ -2,10 +2,6 @@
 
 class GameInfoModel
 {
-    constructor(public info){
-        
-    }
-    
     GetGameInfo(info){
         
     }
@@ -24,22 +20,19 @@ class GameCreationController
         this.model = gameModel;
     }
     AddNewGame(){
-        this.model.SetGameInfo
+        var info = new GameInfo
+        var name = (<HTMLInputElement>document.getElementsByName("gameName").item(0)).value
+        var planesPerPlayer = (<HTMLInputElement>document.getElementsByName("planesCount").item(0)).value
     }
     
 }
 
-interface GameCreationView
-{
-    
-}
-
-
-class CreateGameForm
-{
-    static init() : void {
-        var createGameForm = <HTMLElement>document.getElementById("gameCreationForm")
-        createGameForm.style.display = "block"
-    }
+function GameCreationMain() {
+    var creationForm = <HTMLElement>document.getElementById("gameCreationForm")
+    var model = new GameInfoModel()
+    var controller = new GameCreationController(model)
+    var addGame = <HTMLButtonElement>document.getElementsByName("addGame").item(0)
+    creationForm.style.display = "block"
+    addGame.onclick = function() { controller.AddNewGame() }   
 }
 

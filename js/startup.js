@@ -23,7 +23,7 @@ var Startup = (function () {
     };
     Startup.prototype.createGame = function (elem) {
         var _this = this;
-        this.playerDefinition.setPlayerName(this.playerName, function (s) { _this.createSelector(s, CreateGameForm.init); });
+        this.playerDefinition.setPlayerName(this.playerName, function (s) { _this.createSelector(s, GameCreationMain); });
     };
     Startup.prototype.joinGame = function (elem) {
         var _this = this;
