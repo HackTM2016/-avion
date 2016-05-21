@@ -11,18 +11,33 @@
     <script src="js/gameInfo.js"></script>
     <script src="js/startup.js"></script>
     <script src="js/lobby.js"></script>
+    <style>
+    th, td {
+        padding: 15px;
+    }
+</style>
 </head>
 
 <body bgcolor="#29B6F6">
     ツavion    
     
-    <div id="startup" hidden="true">
+    <div id="startup" hidden>
         <input name="playerName" type="text"></textarea>
         <button name="createGame" type="button">Create Game</button>
         <button name="joinGame" type="button">Join Game</button>
     </div> 
     
-    <div style="position: relative;">
+    <div id="gameCreationForm" hidden>
+        <table style="width:50%" align="center">
+        <tr><td>Game Name</td><td><input type="text" name="gameName" value="Avion"></td></tr>
+        <tr><td>Number of Teams</td><td><input type="text" name="teamsCount" value="2"></td></tr>
+        <tr><td>Player/Team</td><td><input type="text" name="teamSize" value="3"></td></tr>
+        <tr><td>Planes/Player</td><td><input type="text" name="planesCount" value="2"></td></tr>
+        <tr><td colspan="2" align="center"><button name="addGame" type="button">Add Game</button></td></tr>
+        </table>
+    </div>
+    
+    <div id="canvases" style="position: relative;" hidden>
         <canvas id="canvasLayer0" width="512" height="512" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
         <canvas id="canvasLayer1" width="512" height="512" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
     </div>

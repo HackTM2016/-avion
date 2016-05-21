@@ -5,7 +5,7 @@ class GameInfo
 {
     name: string
     numberOfPlayers: number
-    sizeOfPlanesPerPlayer: number
+    numberOfPlanesPerPlayer: number
 }
 
 interface PlayerDefinitionModel
