@@ -21,10 +21,8 @@ class GameCreationController
     }
     AddNewGame(){
         var info = new GameInfo
-        //info.name = document.getElementsByName("gameName").item(0).getAttribute("value")
-        var input_name = <HTMLInputElement>document.getElementsByName("gameName").item(0)
-        var name = input_name.getAttribute("value")
-        info.numberOfPlayers = +document.getElementsByName("teamSize").item(0).getAttribute("value")
+        var name = (<HTMLInputElement>document.getElementsByName("gameName").item(0)).value
+        var planesPerPlayer = (<HTMLInputElement>document.getElementsByName("planesCount").item(0)).value
     }
     
 }
