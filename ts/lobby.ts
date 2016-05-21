@@ -9,7 +9,7 @@ interface LobbyModel
 
 interface GameCreator
 {
-    create(board : GameInfo)
+    create(board : GameInfo, callback: (success : boolean) => void)
     join(id : Identifier)
 }
 

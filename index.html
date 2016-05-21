@@ -9,10 +9,19 @@
     <!-- Load game/lobby engines -->
     <script src="js/game.js"></script>
     <script src="js/gameInfo.js"></script>
+    <script src="js/startup.js"></script>
     <script src="js/lobby.js"></script>
 </head>
 
 <body bgcolor="#007FFF" onload="Game.prototype.Init()">
+    ツavion    
+    
+    <div id="startup" hidden="true">
+        <textarea name="playerName"></textarea>
+        <button name="createGame" type="button">Create Game</button>
+        <button name="joinGame" type="button">Join Game</button>
+    </div> 
+    
     <div style="position: relative;">
         <canvas id="canvasLayer0" width="512" height="512" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
         <canvas id="canvasLayer1" width="512" height="512" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
