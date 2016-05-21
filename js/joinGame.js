@@ -1,4 +1,4 @@
-/// <reference path="gameInfo.ts"/>
+/// <reference path="interfaces.ts"/>
 var JoinGameForm = (function () {
     function JoinGameForm() {
     }

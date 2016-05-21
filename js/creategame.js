@@ -1,4 +1,4 @@
-/// <reference path="gameInfo.ts"/>
+/// <reference path="interfaces.ts"/>
 var GameInfoModel = (function () {
     function GameInfoModel() {
     }
@@ -14,7 +14,7 @@ var GameCreationController = (function () {
         this.model = gameModel;
     }
     GameCreationController.prototype.AddNewGame = function () {
-        var info = new GameInfo;
+        var info = new Lobby;
         var name = document.getElementsByName("gameName").item(0).value;
         var planesPerPlayer = document.getElementsByName("planesCount").item(0).value;
     };
