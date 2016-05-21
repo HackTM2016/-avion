@@ -95,6 +95,7 @@ class Game {
                 // First click, set plane position
                 game.gamePlayerState = GamePlayerState.Alive;
                 
+                // TO DO: Check if position is legal
                 game.airplanePosition = gridClick;
 
                 // Clear, forgot why I added this
