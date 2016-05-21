@@ -161,6 +161,9 @@ body {
     -moz-border-radius: 35px;
     -o-border-radius: 35px;
 	padding: 40px;
+	animation-name: example;
+    animation-duration: 1.25s;
+	 position: relative;
 }
 
 .createScreen {
@@ -209,4 +212,16 @@ body {
     -moz-border-radius: 35px;
     -o-border-radius: 35px;
 	padding: 40px;
+}
+
+
+@-webkit-keyframes example {
+    100%   {width: 50%;}
+    0% {width: 0px;}
+}
+
+/* Standard syntax */
+@keyframes example {
+    100%   {width: 50%;}
+    0% {width: 0px;}
 }
