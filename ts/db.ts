@@ -12,18 +12,18 @@ class PlayerAuthDB implements PlayerAuth {
     callback: (success : boolean) => void
     
     public login(name:string, callback: (success : boolean) => void) {
-        this.callback = callback
-        this.playerRef.transaction({name:name, status:PlayerStatusType.Online}, function(snapshot) {
-            var playersData = snapshot;
-            if (playersData)
-            {
-                playersData.forEach( function(i) {
-                    var player = new Player();
-                    player.name = i.key();
-                    player.status = i.val().Status;
-                });
-            }
-        });
+        // this.callback = callback
+        // this.playerRef.transaction({name:name, status:PlayerStatusType.Online}, function(snapshot) {
+        //     var playersData = snapshot;
+        //     if (playersData)
+        //     {
+        //         playersData.forEach( function(i) {
+        //             var player = new Player();
+        //             player.name = i.key();
+        //             player.status = i.val().Status;
+        //         });
+        //     }
+        // });
         
         GlobalDB.dataRef.child('Rooms').limit(1).once("value", function(snapshot) {
             var roomsData = snapshot;
@@ -43,14 +43,14 @@ class PlayerAuthDB implements PlayerAuth {
     }
 }
 
-class LobbyModel implements JoinGame
+class JoinGameFB implements JoinGame
 {
     private maxNumberOfGames : number;
     private curNumberOfGames : number;
     private addCallback : (name: Lobby) => void;
     private removeCallback : (name: string) => void;
     private startGame: (game : Lobby) => void = null;
-    public static joined: (success : boolean) => void = null;
+    private joined: (success : boolean) => void = null;
     
     private parseSnapshot(snapShot : FirebaseDataSnapshot) : Lobby {
         var lobby = new Lobby();
@@ -63,7 +63,10 @@ class LobbyModel implements JoinGame
         return lobby;
     }
     
-    init(numberOfGames : number, onAdd: (item : Lobby) => void, onRemove: (name: string) => void) : void {
+    init(numberOfGames : number, 
+         onAdd: (item : Lobby) => void, 
+         onRemove: (name: string) => void) : void 
+    {
         this.maxNumberOfGames = numberOfGames;
         this.addCallback = onAdd;
         this.removeCallback = onRemove;
@@ -99,12 +102,55 @@ class LobbyModel implements JoinGame
                 roomPlayersRef.push({'Name':GlobalDB.curPlayer.name});
                 joiningRoomRef.update({'CurNrPlayer':(snapshot.val().CurNrPlayer)});
                 GlobalDB.playerRef.limitToFirst(1).once("child_added", function(snapshot) {
-                    GlobalDB.playerRef.update({'Status':'joined'});
+                    GlobalDB.playerRef.update({'Status':'joined'}, function(error) {
+                        if (error) {
+                            joined(false);
+                        } else {
+                            joined(true);
+                        }
+                    });
                 });
             });
         }                
-    }  
+    }
+}
 
+interface SetupGame
+{
+    init(onAdd: (player : Player) => void, 
+         onRemove: (name : string) => void,
+         onUpdate: (player : Player) => void) : void
+    ready(callback: (success : boolean) => void, 
+          onStartGame: () => void) : void
+}
+
+class SetupGameFB implements SetupGame {
+    private onAdd: (player : Player) => void;
+    private onRemove: (name : string) => void;
+    private onUpdate: (player : Player) => void;
+    
+    init(onAdd: (player : Player) => void, 
+         onRemove: (name : string) => void,
+         onUpdate: (player : Player) => void) 
+    {
+        this.onAdd = onAdd;
+        this.onRemove = onRemove;
+        this.onUpdate = onUpdate;
+    }
+    
+    ready(callback: (success : boolean) => void, 
+          onStartGame: () => void) : void
+    {
+        GlobalDB.playerRef.update({'Status':PlayerStatus.ready}, function(error) {
+            if (error) {
+                callback(false);
+            } else {
+                callback(true);
+            }
+        });
+        
+        
+    }
 }
 
 var reader1 = new PlayerAuthDB();
