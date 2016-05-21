@@ -6,10 +6,16 @@
         "outDir": "js"
     },
     "files": [
-        "ts/test.ts",
         "ts/db.ts",
+        "ts/startup.ts", 
+        "ts/gameInfo.ts", 
         "ts/lobby.ts",
+        "ts/game.ts",
         "ts/gameInfo.ts",
-        "ts/game.ts"
+        "ts/game.ts",
+        "ts/vec2.ts",
+        "ts/Room.ts",
+        "ts/Player.ts"
+        
     ]
 }
