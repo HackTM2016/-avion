@@ -5,6 +5,7 @@ class GameInfo
 {
     id : Identifier
     name : string
-    numberOfPlayers : number
+    numberOfPlayersPerTeam : number
     sizeOfPlanesPerPlayer : number
+    numberOfTeams : number
 }
