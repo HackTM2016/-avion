@@ -163,7 +163,7 @@ body {
 	padding: 40px;
 	animation-name: example;
     animation-duration: 1.25s;
-	 position: relative;
+	position: relative;
 }
 
 .createScreen {
@@ -175,7 +175,7 @@ body {
 
 .buttonAdd,
 .buttonAdd:visited {
-	 font-family: "FiraSans";
+	font-family: "FiraSans";
     width: 320px;
     background-color: #29B6F6;
     border: none;
@@ -205,6 +205,7 @@ body {
 }
 
 .gameJoin {
+	font-family: "FiraSans";
 	background: white;
 	box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
 	width: 50%;
@@ -212,6 +213,9 @@ body {
     -moz-border-radius: 35px;
     -o-border-radius: 35px;
 	padding: 40px;
+	animation-name: example;
+    animation-duration: 1.25s;
+	position: relative;
 }
 
 
@@ -224,4 +228,41 @@ body {
 @keyframes example {
     100%   {width: 50%;}
     0% {width: 0px;}
+}
+
+.tableHeader {
+	font-family: "FiraSans";
+    font-size: 15px;
+    color: #565656;
+}
+
+.joinGame,
+.joinGame:visited {
+	font-family: "FiraSans";
+    width: 100px;
+    background-color: #29B6F6;
+    border: none;
+    color: #ffffff;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 10px 5px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -o-border-radius: 100px;
+    box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+    cursor: pointer;
+    cursor: hand;
+    outline: none;
+}
+
+.joinGame:hover {
+	background: #FFA200;
+    color: #ffffff;
 }
