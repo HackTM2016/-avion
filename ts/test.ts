@@ -1,4 +1,5 @@
+/// <reference path="lobby.ts"/>
 
 function test() {
-    alert("TypeScript Test");
+    InitLobby()
 }
