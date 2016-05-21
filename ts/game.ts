@@ -2,7 +2,10 @@
 /// <reference path="player.ts"/>
 
 interface GameEvents {
-    onAttack(pos:vec2, effect: (coord:vec2, type:string, playerName : string) => void)
+    init(onAttack: (coord:vec2, type:string, playerName : string) => void, 
+         onPlayerDrop: (playerName:string) => void, 
+         onGameChange: (status:string) => void)
+    shoot(pos:vec2, effect: (coord:vec2, type:string, playerName : string) => void) 
 }
 
 class Game {
