@@ -147,6 +147,7 @@ body {
 
 .gameCreation {
 	background: white;
+	box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
 	-webkit-border-radius: 35px;
     -moz-border-radius: 35px;
     -o-border-radius: 35px;
@@ -189,4 +190,14 @@ body {
 .buttonAdd:hover {
     background: #FFA200;
     color: #ffffff;
+}
+
+.gameJoin {
+	background: white;
+	box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+	width: 50%;
+	-webkit-border-radius: 35px;
+    -moz-border-radius: 35px;
+    -o-border-radius: 35px;
+	padding: 40px;
 }
