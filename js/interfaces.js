@@ -17,13 +17,6 @@ var LobbyStatusType;
     LobbyStatusType[LobbyStatusType["Setup"] = 1] = "Setup";
     LobbyStatusType[LobbyStatusType["Closed"] = 2] = "Closed";
 })(LobbyStatusType || (LobbyStatusType = {}));
-var PlayerStatusType;
-(function (PlayerStatusType) {
-    PlayerStatusType[PlayerStatusType["Online"] = 0] = "Online";
-    PlayerStatusType[PlayerStatusType["Setup"] = 1] = "Setup";
-    PlayerStatusType[PlayerStatusType["Ready"] = 2] = "Ready";
-    PlayerStatusType[PlayerStatusType["Offline"] = 3] = "Offline";
-})(PlayerStatusType || (PlayerStatusType = {}));
 var vec2 = (function () {
     function vec2() {
         this.x = 0;
