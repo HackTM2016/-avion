@@ -1,0 +1,1 @@
+{"version":3,"file":"joinGame.js","sourceRoot":"","sources":["../ts/joinGame.ts"],"names":[],"mappings":"AAAA,mCAAmC;AAEnC;IAAA;IAMA,CAAC;IAJU,iBAAI,GAAX;QACI,IAAI,YAAY,GAAgB,QAAQ,CAAC,cAAc,CAAC,cAAc,CAAC,CAAA;QACvE,YAAY,CAAC,KAAK,CAAC,OAAO,GAAG,OAAO,CAAA;IACxC,CAAC;IACL,mBAAC;AAAD,CAAC,AAND,IAMC"}
