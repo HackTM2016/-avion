@@ -1,22 +1,22 @@
 class Game {
-    myCanvas:HTMLCanvasElement;
-    context:CanvasRenderingContext2D;
-    bgImage:any;
-    
+    canvasLayer0: HTMLCanvasElement;
+    contextLayer0: CanvasRenderingContext2D;
+    bgImage: any;
+
     Init() {
         var game = this;
-        
-        game.myCanvas = <HTMLCanvasElement>document.getElementById('canvas');
-        game.context = game.myCanvas.getContext('2d');
+
+        game.canvasLayer0 = <HTMLCanvasElement>document.getElementById('canvasLayer0');
+        game.contextLayer0 = game.canvasLayer0.getContext('2d');
 
         game.bgImage = new Image();
         game.bgImage.onload = function () {
-            var pattern = game.context.createPattern(game.bgImage, 'repeat');
-            game.context.rect(0, 0, game.myCanvas.width, game.myCanvas.height);
-            game.context.fillStyle = pattern;
-            game.context.fill();
+            var pattern = game.contextLayer0.createPattern(game.bgImage, 'repeat');
+            game.contextLayer0.rect(0, 0, game.canvasLayer0.width, game.canvasLayer0.height);
+            game.contextLayer0.fillStyle = pattern;
+            game.contextLayer0.fill();
         }
-        
+
         game.bgImage.src = 'img/dots.png';
     }
 }
