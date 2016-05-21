@@ -5,66 +5,24 @@
     <meta charset="UTF-8">
     <!-- Load firebase db engine -->
     <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+	<script src='js/lodash.js'></script>
+    <script src='js/Player.js'></script>
+    <script src='js/Room.js'></script>
+    <script src='js/vec2.js'></script>
     <script src='js/db.js'></script>
     <!-- Load game/lobby engines -->
     <script src="js/game.js"></script>
     <script src="js/gameInfo.js"></script>
     <script src="js/startup.js"></script>
     <script src="js/lobby.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+    
     <style>
     th, td {
         padding: 15px;
     }
 
-    
-.button,
-.button:visited {
-    font-family: "FiraSans";
-    width: 200px;
-    background-color: #ffffff;
-    border: none;
-    color: #29B6F6;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 19px;
-    margin: 20px 20px;
-    -webkit-border-radius: 25px;
-    -moz-border-radius: 25px;
-    -o-border-radius: 25px;
-    box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
-    -webkit-transition: all 0.7s;
-    -moz-transition: all 0.5s;
-    -o-transition: all 0.5s;
-    transition: all 0.5s;
-    cursor: pointer;
-    cursor: hand;
-    outline: none;
-
-}
-
-.button:hover {
-    background: #29B6F6;
-    color: #ffffff;
-}
-
-@font-face {
-    font-family: "FiraSans";
-    src: url('fonts/FiraSans-Book.ttf') format('truetype');   
-}
-
-@font-face {
-    font-family: "FiraSans";
-    font-weight: strong;
-    src: url('fonts/FiraSans-Medium.ttf') format('truetype');   
-}
-
-@font-face {
-    font-family: "FiraSans";
-    font-weight: bold;
-    src: url('fonts/FiraSans-Heavy.ttf') format('truetype');   
-}
 
 </style>
 </head>
