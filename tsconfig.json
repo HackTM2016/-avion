@@ -9,7 +9,7 @@
         "ts/test.ts",
         "ts/db.ts",
         "ts/lobby.ts",
-        "ts/test.ts",
+        "ts/gameInfo.ts",
         "ts/game.ts"
     ]
 }
