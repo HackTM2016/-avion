@@ -4,6 +4,7 @@ var GlobalDB = (function () {
     function GlobalDB() {
     }
     GlobalDB.dataRef = new Firebase('https://project-4810418174258671406.firebaseio.com/');
+    GlobalDB.curPlayer = null;
     return GlobalDB;
 }());
 var PlayerAuthDB = (function () {
@@ -11,7 +12,8 @@ var PlayerAuthDB = (function () {
         this.playerRef = GlobalDB.dataRef.child("Players");
     }
     PlayerAuthDB.prototype.login = function (name, callback) {
-        this.playerRef.once("value", function (snapshot) {
+        this.callback = callback;
+        this.playerRef.transaction({ name: name, status: PlayerStatusType.Online }, function (snapshot) {
             var playersData = snapshot;
             if (playersData) {
                 playersData.forEach(function (i) {
