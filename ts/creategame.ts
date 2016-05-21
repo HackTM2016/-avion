@@ -1,4 +1,4 @@
-/// <reference path="gameInfo.ts"/>
+/// <reference path="interfaces.ts"/>
 
 class GameInfoModel
 {
@@ -20,7 +20,7 @@ class GameCreationController
         this.model = gameModel;
     }
     AddNewGame(){
-        var info = new GameInfo
+        var info = new Lobby
         var name = (<HTMLInputElement>document.getElementsByName("gameName").item(0)).value
         var planesPerPlayer = (<HTMLInputElement>document.getElementsByName("planesCount").item(0)).value
     }
