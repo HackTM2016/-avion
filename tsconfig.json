@@ -5,5 +5,5 @@
         "sourceMap": true,
         "outDir": "js"
     },
-    "files": ["ts/test.ts"]
+    "files": ["ts/test.ts", "ts/game.ts"]
 }
