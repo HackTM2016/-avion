@@ -17,6 +17,13 @@ var LobbyStatusType;
     LobbyStatusType[LobbyStatusType["Setup"] = 1] = "Setup";
     LobbyStatusType[LobbyStatusType["Closed"] = 2] = "Closed";
 })(LobbyStatusType || (LobbyStatusType = {}));
+var PlayerStatus = {
+    new: "new",
+    inRoom: "inRoom",
+    ready: "ready",
+    inGame: "inGame",
+    disconnected: "disconnected"
+};
 var vec2 = (function () {
     function vec2() {
         this.x = 0;

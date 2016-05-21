@@ -1,10 +1,10 @@
 /// <reference path="interfaces.ts"/>
+/// <reference path="gameutils.ts"/>
 
 class JoinGameForm
 {
     static init() : void {
-        var joinGameForm = <HTMLElement>document.getElementById("gameJoinForm")
-        joinGameForm.style.display = "block"
+        SetVisibleDiv("gameJoinForm")
     }
 }
 

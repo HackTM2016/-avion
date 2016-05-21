@@ -13,17 +13,18 @@ var PlayerAuthDB = (function () {
         this.playerRef = GlobalDB.dataRef.child("Players");
     }
     PlayerAuthDB.prototype.login = function (name, callback) {
-        this.callback = callback;
-        this.playerRef.transaction({ name: name, status: PlayerStatusType.Online }, function (snapshot) {
-            var playersData = snapshot;
-            if (playersData) {
-                playersData.forEach(function (i) {
-                    var player = new Player();
-                    player.name = i.key();
-                    player.status = i.val().Status;
-                });
-            }
-        });
+        // this.callback = callback
+        // this.playerRef.transaction({name:name, status:PlayerStatusType.Online}, function(snapshot) {
+        //     var playersData = snapshot;
+        //     if (playersData)
+        //     {
+        //         playersData.forEach( function(i) {
+        //             var player = new Player();
+        //             player.name = i.key();
+        //             player.status = i.val().Status;
+        //         });
+        //     }
+        // });
         GlobalDB.dataRef.child('Rooms').limit(1).once("value", function (snapshot) {
             var roomsData = snapshot;
             var alertstring = "Init:";
@@ -40,11 +41,12 @@ var PlayerAuthDB = (function () {
     };
     return PlayerAuthDB;
 }());
-var LobbyModel = (function () {
-    function LobbyModel() {
+var JoinGameFB = (function () {
+    function JoinGameFB() {
         this.startGame = null;
+        this.joined = null;
     }
-    LobbyModel.prototype.parseSnapshot = function (snapShot) {
+    JoinGameFB.prototype.parseSnapshot = function (snapShot) {
         var lobby = new Lobby();
         lobby.status = snapShot.val().CurNrPlayer;
         lobby.maxNoPlayers = snapShot.val().MaxNrPlayer;
@@ -53,7 +55,7 @@ var LobbyModel = (function () {
         lobby.name = snapShot.key();
         return lobby;
     };
-    LobbyModel.prototype.init = function (numberOfGames, onAdd, onRemove) {
+    JoinGameFB.prototype.init = function (numberOfGames, onAdd, onRemove) {
         this.maxNumberOfGames = numberOfGames;
         this.addCallback = onAdd;
         this.removeCallback = onRemove;
@@ -77,7 +79,7 @@ var LobbyModel = (function () {
             }
         });
     };
-    LobbyModel.prototype.join = function (name, joined) {
+    JoinGameFB.prototype.join = function (name, joined) {
         var roomsRef = GlobalDB.dataRef.child('Rooms');
         var joiningRoomRef = roomsRef.child(name);
         if (joiningRoomRef) {
@@ -86,13 +88,39 @@ var LobbyModel = (function () {
                 roomPlayersRef.push({ 'Name': GlobalDB.curPlayer.name });
                 joiningRoomRef.update({ 'CurNrPlayer': (snapshot.val().CurNrPlayer) });
                 GlobalDB.playerRef.limitToFirst(1).once("child_added", function (snapshot) {
-                    GlobalDB.playerRef.update({ 'Status': 'joined' });
+                    GlobalDB.playerRef.update({ 'Status': 'joined' }, function (error) {
+                        if (error) {
+                            joined(false);
+                        }
+                        else {
+                            joined(true);
+                        }
+                    });
                 });
             });
         }
     };
-    LobbyModel.joined = null;
-    return LobbyModel;
+    return JoinGameFB;
+}());
+var SetupGameFB = (function () {
+    function SetupGameFB() {
+    }
+    SetupGameFB.prototype.init = function (onAdd, onRemove, onUpdate) {
+        this.onAdd = onAdd;
+        this.onRemove = onRemove;
+        this.onUpdate = onUpdate;
+    };
+    SetupGameFB.prototype.ready = function (callback, onStartGame) {
+        GlobalDB.playerRef.update({ 'Status': PlayerStatus.ready }, function (error) {
+            if (error) {
+                callback(false);
+            }
+            else {
+                callback(true);
+            }
+        });
+    };
+    return SetupGameFB;
 }());
 var reader1 = new PlayerAuthDB();
 //reader1.login();
