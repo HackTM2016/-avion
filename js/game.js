@@ -76,6 +76,7 @@ var Game = (function () {
         game.hitX.src = 'img/plane-hit.png';
         game.enemyMissX.src = 'img/enemy-hit.png';
         game.enemyHitX.src = 'img/enemy-damage.png';
+        game.hitHistory = [];
         // Handlers
         game.bgImage.onload = function () {
             // Draw grid manually (needs to be done manually for scaling)
@@ -90,8 +91,27 @@ var Game = (function () {
             // Draw yellow (highlited) grid dot
             game.drawTileImage(game.contextLayer0, game.hoverGridImage, gridPos);
         }, false);
+        function validateDeployPosition(positionOnGrid) {
+            if (game.airplaneOrientation == AirplaneOrientation.Up && ((positionOnGrid.x > boardSize.x - 5) || (positionOnGrid.y > boardSize.y - 4))) {
+                return false;
+            }
+            else if (game.airplaneOrientation == AirplaneOrientation.Down && ((positionOnGrid.x > boardSize.x - 5) || (positionOnGrid.y > boardSize.y - 4))) {
+                return false;
+            }
+            else if (game.airplaneOrientation == AirplaneOrientation.Left && ((positionOnGrid.x > boardSize.x - 4) || (positionOnGrid.y > boardSize.y - 5))) {
+                return false;
+            }
+            else if (game.airplaneOrientation == AirplaneOrientation.Right && ((positionOnGrid.x > boardSize.x - 4) || (positionOnGrid.y > boardSize.y - 5))) {
+                return false;
+            }
+            return true;
+        }
         game.canvasLayer1.addEventListener('mouseup', function (evt) {
             var gridClick = game.GetGridPos({ x: evt.clientX, y: evt.clientY });
+            if (!validateDeployPosition(gridClick) && game.gamePlayerState == GamePlayerState.Initial) {
+                StatusMessage("Wrong position for the airplane!");
+                return;
+            }
             if (game.gamePlayerState == GamePlayerState.Initial) {
                 // First click, set plane position
                 game.gamePlayerState = GamePlayerState.Alive;
@@ -156,14 +176,18 @@ var Game = (function () {
         }
     };
     Game.prototype.shotResponse = function (coord, type, playerName) {
-        if (type == GameEventType.Hit) {
-            this.drawTileImage(this.contextLayer1, this.hitX, coord);
-        }
-        else if (type == GameEventType.Kill) {
-            this.drawTileImage(this.contextLayer1, this.killX, coord);
-        }
-        else {
-            this.drawTileImage(this.contextLayer1, this.missX, coord);
+        if (!(this.hitHistory[coord.x + ";" + coord.y]) || this.hitHistory[coord.x + ";" + coord.y] < type) {
+            this.hitHistory[coord.x + ";" + coord.y] = type;
+            if (type == GameEventType.Hit) {
+                this.drawTileImage(this.contextLayer1, this.hitX, coord);
+            }
+            else if (type == GameEventType.Kill) {
+                this.drawTileImage(this.contextLayer1, this.killX, coord);
+                StatusMessage(playerName + " is out");
+            }
+            else {
+                this.drawTileImage(this.contextLayer1, this.missX, coord);
+            }
         }
     };
     Game.prototype.onAttack = function (coord, playerName) {
@@ -179,7 +203,9 @@ var Game = (function () {
                 this.drawTileImage(this.contextLayer1, this.enemyHitX, coord);
                 break;
             case GameEventType.Miss:
-                this.drawTileImage(this.contextLayer1, this.enemyMissX, coord);
+                if (!(this.hitHistory[coord.x + ";" + coord.y])) {
+                    this.drawTileImage(this.contextLayer1, this.enemyMissX, coord);
+                }
             default:
                 break;
         }

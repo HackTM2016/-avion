@@ -50,3 +50,8 @@ function JudgeHit(hitCoord: vec2, planeCoord: vec2, planeOrientation: AirplaneOr
         
         return GameEventType.Miss;
     }
+    
+    function StatusMessage(msg:string){
+        var statusElement = document.getElementById('status')
+        statusElement.innerText=msg
+    }

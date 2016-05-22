@@ -44,4 +44,8 @@ function JudgeHit(hitCoord, planeCoord, planeOrientation) {
     }
     return GameEventType.Miss;
 }
+function StatusMessage(msg) {
+    var statusElement = document.getElementById('status');
+    statusElement.innerText = msg;
+}
 //# sourceMappingURL=gameutils.js.map
