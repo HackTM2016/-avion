@@ -219,28 +219,6 @@ class Game {
         }
     }
 
-    judgeHit(hitCoord: vec2): GameEventType {
-
-        var actualHitCoord = { x: hitCoord.x * tileSize, y: hitCoord.y * tileSize };
-
-        // Get the pixel color from Layer1
-        var pixelData = this.contextLayer1.getImageData(actualHitCoord.x, actualHitCoord.y, 1, 1).data;
-        // Pixel data is RGBA, 8bpp
-        var alpha = pixelData[3];
-
-        if (alpha <= 127) {
-            return GameEventType.Miss;
-        }
-        else {
-            if (alpha < 255) {
-                return GameEventType.Kill;
-            }
-            else {
-                return GameEventType.Hit;
-            }
-        }
-    }
-
     shotResponse(coord: vec2, type: GameEventType, playerName: string): void {
         if (type == GameEventType.Hit) {
             this.drawTileImage(this.contextLayer1, this.hitX, coord)
@@ -253,7 +231,7 @@ class Game {
         }
     }
     onAttack(coord: vec2, playerName: string): GameEventType {
-        var type: GameEventType = this.judgeHit(coord);
+        var type: GameEventType = JudgeHit(coord, this.airplanePosition);
 
         switch (type) {
             case GameEventType.Hit:

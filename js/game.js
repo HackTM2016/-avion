@@ -74,6 +74,14 @@ var Game = (function () {
         game.hitX.src = 'img/plane-hit.png';
         game.enemyMissX.src = 'img/enemy-hit.png';
         game.enemyHitX.src = 'img/enemy-damage.png';
+<<<<<<< HEAD
+=======
+        game.killX.crossOrigin = "Anonymous";
+        game.missX.crossOrigin = "Anonymous";
+        game.hitX.crossOrigin = "Anonymous";
+        game.enemyMissX.crossOrigin = "Anonymous";
+        game.enemyHitX.crossOrigin = "Anonymous";
+>>>>>>> 0718999b385e93dc6627deced2718edb406c4fd8
         // Handlers
         game.bgImage.onload = function () {
             // Draw grid manually (needs to be done manually for scaling)
@@ -184,7 +192,11 @@ var Game = (function () {
         }
     };
     Game.prototype.onAttack = function (coord, playerName) {
+<<<<<<< HEAD
         var type = this.judgeHit(coord);
+=======
+        var type = JudgeHit(coord, this.airplanePosition);
+>>>>>>> 0718999b385e93dc6627deced2718edb406c4fd8
         switch (type) {
             case GameEventType.Hit:
             case GameEventType.Kill:
