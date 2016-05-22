@@ -10,25 +10,19 @@ class Startup
 {
     playerName: string = ""
     playerAuth: PlayerAuth = new PlayerAuthMock
-    div: HTMLElement = <HTMLElement>document.getElementById("startup")
 
     static init() : void {
-        // var game = new Game
-        // game.Init()
-        // if (game != null)
-        // {
-        //     return
-        // }
         var startup = new Startup
-        startup.div.style.display = "block";
+        var div = <HTMLElement>document.getElementById("startup")
+        SetVisibleDiv("startup")
         
-        var playerName = <HTMLInputElement>startup.div.children.namedItem("playerName")
+        var playerName = <HTMLInputElement>div.children.namedItem("playerName")
         playerName.onclick = function () { startup.changeName(this) }
         
-        var createGame = <HTMLButtonElement>startup.div.children.namedItem("createGame")
+        var createGame = <HTMLButtonElement>div.children.namedItem("createGame")
         createGame.onclick = function () { startup.createGame(this) }
         
-        var joinGame = <HTMLButtonElement>startup.div.children.namedItem("joinGame")
+        var joinGame = <HTMLButtonElement>div.children.namedItem("joinGame")
         joinGame.onclick = function () { startup.joinGame(this) }
     }
     
@@ -50,7 +44,7 @@ class Startup
     
     createSelector(success: boolean, move: () => void) : any {
         if (success) {
-            this.div.style.display = "none";
+            SetInvisibleDiv("startup")
             move()
         }
         else {

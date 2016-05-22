@@ -1,45 +1,140 @@
 /// <reference path="lib/firebase.d.ts"/>
 /// <reference path="lib/lodash.d.ts"/>
-var GlobalDB = (function () {
-    function GlobalDB() {
+/// <reference path="interfaces.ts"/>
+// Septi DB: https://project-4810418174258671406.firebaseio.com/
+var GlobalFB = (function () {
+    function GlobalFB() {
     }
-    GlobalDB.dataRef = new Firebase('https://project-4810418174258671406.firebaseio.com/');
-    GlobalDB.curPlayer = null;
-    GlobalDB.playerRef = null;
-    return GlobalDB;
+    GlobalFB.dataRef = new Firebase('https://incandescent-fire-3223.firebaseio.com/avion/');
+    GlobalFB.curPlayer = null;
+    GlobalFB.curLobby = null;
+    GlobalFB.playerRef = null;
+    return GlobalFB;
 }());
-var PlayerAuthDB = (function () {
-    function PlayerAuthDB() {
-        this.playerRef = GlobalDB.dataRef.child("Players");
+var PlayerAuthFB = (function () {
+    function PlayerAuthFB() {
+        this.playerRef = GlobalFB.dataRef.child("Players");
+        this.callback = null;
     }
-    PlayerAuthDB.prototype.login = function (name, callback) {
-        // this.callback = callback
-        // this.playerRef.transaction({name:name, status:PlayerStatusType.Online}, function(snapshot) {
-        //     var playersData = snapshot;
-        //     if (playersData)
-        //     {
-        //         playersData.forEach( function(i) {
-        //             var player = new Player();
-        //             player.name = i.key();
-        //             player.status = i.val().Status;
-        //         });
-        //     }
-        // });
-        GlobalDB.dataRef.child('Rooms').limit(1).once("value", function (snapshot) {
-            var roomsData = snapshot;
-            var alertstring = "Init:";
-            if (!roomsData)
-                alertstring += "None";
-            else
-                roomsData.forEach(function (i) {
-                    alertstring += i.key() + ": " + i.val().Status;
-                });
-            alert(alertstring.toString());
-        });
+    PlayerAuthFB.prototype.login = function (name, callback) {
+        var _this = this;
+        if (GlobalFB.curPlayer != null) {
+            // Already logged in or in loggin process, return error.
+            if (callback)
+                callback(false);
+            return;
+        }
+        GlobalFB.curPlayer = new Player();
+        GlobalFB.curPlayer = { name: name, status: PlayerStatus.new };
+        this.callback = callback;
+        this.playerRef.child(name).transaction(function (old_snapshot) {
+            // If user does not exist, add it
+            if (old_snapshot === null) {
+                return { hit: { x: 0, y: 0 }, status: PlayerStatus.new };
+            }
+            else {
+                // Otherwise return to fail the transaction
+                return;
+            }
+        }, function (err, commited, snapshot) { return (_this.onCommit(err, commited, snapshot)); });
     };
-    PlayerAuthDB.prototype.logout = function () {
+    PlayerAuthFB.prototype.logout = function () {
+        // If not logged in, simply return
+        if (!GlobalFB.curPlayer)
+            return;
+        // Go offline to break all connections
+        // Create new connection to start all over (goOnline it will recreate all observers)
+        GlobalFB.curPlayer = null;
+        Firebase.goOffline();
+        GlobalFB.dataRef = new Firebase('https://incandescent-fire-3223.firebaseio.com/avion/');
+        this.playerRef = GlobalFB.dataRef.child("Players");
     };
-    return PlayerAuthDB;
+    PlayerAuthFB.prototype.onCommit = function (err, commited, snapshot) {
+        if (err || !commited) {
+            GlobalFB.curPlayer = null;
+            if (this.callback) {
+                this.callback(false);
+            }
+        }
+        else {
+            // Weird error, no global player found, remove FB entry and fail
+            if (GlobalFB.curLobby == null) {
+                this.playerRef.child(snapshot.key()).remove();
+                if (this.callback) {
+                    this.callback(false);
+                }
+            }
+            // All OK. Set onDisconect directive and callback true
+            this.playerRef.child(GlobalFB.curPlayer.name).onDisconnect().remove();
+            if (this.callback) {
+                this.callback(true);
+            }
+        }
+    };
+    return PlayerAuthFB;
+}());
+var CreateGameFB = (function () {
+    function CreateGameFB() {
+        this.lobbyRef = GlobalFB.dataRef.child("Rooms");
+        this.callback = null;
+    }
+    CreateGameFB.prototype.create = function (board, callback) {
+        var _this = this;
+        // If already in a lobby, disconnect from there
+        if (GlobalFB.curLobby != null) {
+            this.lobbyRef.child(GlobalFB.curLobby.name)
+                .child("Players")
+                .child(GlobalFB.curPlayer.name).remove();
+        }
+        GlobalFB.curLobby = board;
+        this.callback = callback;
+        this.lobbyRef.child(board.name).transaction(function (old_snapshot) {
+            // If room does not exist, add it
+            if (old_snapshot === null) {
+                var plr = {};
+                plr[GlobalFB.curPlayer.name] = 'joined';
+                return { Name: GlobalFB.curLobby.name,
+                    Status: LobbyStatusType.Open,
+                    MaxNrPlayer: GlobalFB.curLobby.maxNoPlayers,
+                    PlainsPerPlayer: GlobalFB.curLobby.planesPerPlayer,
+                    MapSize: GlobalFB.curLobby.mapSize,
+                    CurNrPlayer: 1,
+                    Players: plr };
+            }
+            else {
+                // Otherwise return to fail the transaction
+                return;
+            }
+        }, function (err, commited, snapshot) { return (_this.onCommit(err, commited, snapshot)); });
+    };
+    CreateGameFB.prototype.onCommit = function (err, commited, snapshot) {
+        if (err || !commited) {
+            GlobalFB.curLobby = null;
+            if (this.callback) {
+                this.callback(false);
+            }
+        }
+        else {
+            // Weird error, no global lobby/player found, remove FB entry and fail
+            if (GlobalFB.curLobby == null ||
+                GlobalFB.curPlayer == null) {
+                this.lobbyRef.child(snapshot.key()).remove();
+                if (this.callback) {
+                    this.callback(false);
+                }
+            }
+            // All OK. Set onDisconect directive and callback true
+            this.lobbyRef.child(GlobalFB.curLobby.name)
+                .child("Players").child(GlobalFB.curPlayer.name)
+                .onDisconnect().remove();
+            /* or disconnect lobby if leader leaves:
+            this.lobbyRef.child(GlobalFB.curLobby.name).onDisconnect().remove() */
+            if (this.callback) {
+                this.callback(true);
+            }
+        }
+    };
+    return CreateGameFB;
 }());
 var JoinGameFB = (function () {
     function JoinGameFB() {
@@ -59,7 +154,7 @@ var JoinGameFB = (function () {
         this.maxNumberOfGames = numberOfGames;
         this.addCallback = onAdd;
         this.removeCallback = onRemove;
-        var roomsRef = GlobalDB.dataRef.child('Rooms');
+        var roomsRef = GlobalFB.dataRef.child('Rooms');
         roomsRef.on("child_added", function (childSnapshot, prevChildKey) {
             if (this.curNumberOfGames < this.maxNumberOfGames) {
                 var gameInfo = this.parseSnapshot(childSnapshot);
@@ -80,15 +175,15 @@ var JoinGameFB = (function () {
         });
     };
     JoinGameFB.prototype.join = function (name, joined) {
-        var roomsRef = GlobalDB.dataRef.child('Rooms');
+        var roomsRef = GlobalFB.dataRef.child('Rooms');
         var joiningRoomRef = roomsRef.child(name);
         if (joiningRoomRef) {
             var roomPlayersRef = joiningRoomRef.child("Players");
             joiningRoomRef.limitToFirst(1).once("child_added", function (snapshot) {
-                roomPlayersRef.push({ 'Name': GlobalDB.curPlayer.name });
+                roomPlayersRef.push({ 'Name': GlobalFB.curPlayer.name });
                 joiningRoomRef.update({ 'CurNrPlayer': (snapshot.val().CurNrPlayer) });
-                GlobalDB.playerRef.limitToFirst(1).once("child_added", function (snapshot) {
-                    GlobalDB.playerRef.update({ 'Status': 'joined' }, function (error) {
+                GlobalFB.playerRef.limitToFirst(1).once("child_added", function (snapshot) {
+                    GlobalFB.playerRef.update({ 'Status': 'joined' }, function (error) {
                         if (error) {
                             joined(false);
                         }
@@ -111,7 +206,7 @@ var SetupGameFB = (function () {
         this.onUpdate = onUpdate;
     };
     SetupGameFB.prototype.ready = function (callback, onStartGame) {
-        GlobalDB.playerRef.update({ 'Status': PlayerStatus.ready }, function (error) {
+        GlobalFB.playerRef.update({ 'Status': PlayerStatus.ready }, function (error) {
             if (error) {
                 callback(false);
             }
@@ -122,6 +217,63 @@ var SetupGameFB = (function () {
     };
     return SetupGameFB;
 }());
-var reader1 = new PlayerAuthDB();
-//reader1.login();
+//
+//  For testing only !!!
+//
+var TestFB = (function () {
+    function TestFB() {
+    }
+    TestFB.onCreateCommit = function (ok) {
+        if (ok) {
+            console.log("Lobby create success!");
+        }
+        else {
+            console.log("Lobby create failed!");
+        }
+    };
+    TestFB.onLoginCommit = function (ok) {
+        if (ok) {
+            console.log("Login success!");
+        }
+        else {
+            console.log("Login failed!");
+        }
+    };
+    TestFB.prototype.LoginTest = function () {
+        var plAuth = new PlayerAuthFB();
+        console.log("Attempt login with Mihai - expect ok");
+        plAuth.login("Mihai", TestFB.onLoginCommit);
+        console.log("Attempt login with Mumu - expect fail");
+        plAuth.login("Mumu", TestFB.onLoginCommit);
+        var pl1 = GlobalFB.curPlayer;
+        GlobalFB.curPlayer = null;
+        console.log("Attempt login with Mihai - expect fail");
+        plAuth.login("Mihai", TestFB.onLoginCommit);
+        GlobalFB.curPlayer = pl1;
+        //console.log("Logoff from Mihai")
+        //plAuth.logout()
+        /*GlobalFB.curPlayer=null
+         console.log("Attempt login with Mumu - expect ok")
+         plAuth.login("Mumu", TestFB.onLoginCommit)
+         GlobalFB.curPlayer = pl1*/
+    };
+    TestFB.prototype.CreateTest = function () {
+        var plLobby = new CreateGameFB();
+        var lb1 = new Lobby();
+        lb1.name = "testLobby1"; //leave the rest default
+        console.log("Attempt create testLobby1 - expect ok");
+        plLobby.create(lb1, TestFB.onCreateCommit);
+        lb1.name = "testLobby2";
+        lb1.maxNoPlayers = 6; //leave the rest default
+        console.log("Attempt create testLobby2 - expect ok");
+        plLobby.create(lb1, TestFB.onCreateCommit);
+    };
+    TestFB.prototype.run = function () {
+        this.LoginTest();
+        setTimeout(this.CreateTest(), 5000);
+    };
+    return TestFB;
+}());
+var autoTest = new TestFB;
+autoTest.run();
 //# sourceMappingURL=db.js.map
