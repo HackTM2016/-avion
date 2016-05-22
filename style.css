@@ -56,7 +56,8 @@ input[type=text] {
     box-sizing: border-box;
     border: none;
     border-bottom: 2px solid #BDBDBD;
-    color: #BDBDBD;
+    color: #29B6F6;
+	outline: none;
 
 }
 
@@ -82,6 +83,14 @@ textarea.usernameForm {
 
 input:focus {
     ourline: none;
+}
+
+.inputGame {
+    font-family: "FiraSans";
+    font-size: 22px;
+    text-align: center;
+	font-weight: bold;
+	color: #29B6F6;
 }
 
 .inputGame::-webkit-input-placeholder {
@@ -143,4 +152,172 @@ body {
     from {left: 50%; width: 0;z-index:100;}
     33.3333% {left: 0; width: 100%;z-index: 10;}
     to {left: 0; width: 100%;}
+}
+
+.gameCreation {
+	background: white;
+	box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+	-webkit-border-radius: 35px;
+    -moz-border-radius: 35px;
+    -o-border-radius: 35px;
+	padding: 40px;
+	animation-name: example;
+    animation-duration: 0.4s;
+	position: relative;
+}
+
+.createScreen {
+	font-family: "FiraSans";
+    font-size: 45px;
+    color: #FFA200;
+	font-weight: bold;
+}
+
+.buttonAdd,
+.buttonAdd:visited {
+	font-family: "FiraSans";
+    width: 320px;
+    background-color: #29B6F6;
+    border: none;
+    color: #ffffff;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 27px;
+    margin: 20px 20px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -o-border-radius: 100px;
+    box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+    cursor: pointer;
+    cursor: hand;
+    outline: none;
+}
+
+.buttonAdd:hover {
+    background: #FFA200;
+    color: #ffffff;
+}
+
+.gameJoin {
+	font-family: "FiraSans";
+	background: white;
+	box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+	width: 50%;
+	-webkit-border-radius: 35px;
+    -moz-border-radius: 35px;
+    -o-border-radius: 35px;
+	padding: 40px;
+	animation-name: example;
+    animation-duration: 0.4s;
+	position: relative;
+}
+
+
+@-webkit-keyframes example {
+    100%   {width: 50%;}
+    0% {width: 0px;}
+	
+}
+
+/* Standard syntax */
+@keyframes example {
+    100%   {-webkit-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);}
+	75%   {-webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);}	
+	
+    0% {-webkit-transform: scale(0.0);
+        -ms-transform: scale(0.0);
+        transform: scale(0.0);}
+}
+
+.tableHeader {
+	font-family: "FiraSans";
+    font-size: 15px;
+    color: #565656;
+}
+
+.joinGame,
+.joinGame:visited {
+	font-family: "FiraSans";
+    width: 100px;
+    background-color: #29B6F6;
+    border: none;
+    color: #ffffff;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 10px 5px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -o-border-radius: 100px;
+    box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+    cursor: pointer;
+    cursor: hand;
+    outline: none;
+}
+
+.joinGame:hover {
+	background: #FFA200;
+    color: #ffffff;
+}
+
+
+/* This only works with JavaScript, 
+if it's not present, don't show loader */
+.no-js #loader { display: none;  }
+.js #loader { display: block; position: absolute; left: 100px; top: 0; }
+.se-pre-con {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url(img/avion-loader.gif) center no-repeat #fff;
+}
+
+.buttonClose,
+.buttonClose:visited {
+	font-family: "FiraSans";
+    width: 90px;
+    background-color: #F2120C;
+    border: none;
+    color: #ffffff;
+    
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 17px;
+    margin: 8px 8px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -o-border-radius: 100px;
+    box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+    cursor: pointer;
+    cursor: hand;
+    outline: none;
+}
+
+.buttonClose:hover {
+	background: #FF2727;
+    color: #ffffff;
 }
