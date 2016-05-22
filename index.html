@@ -23,11 +23,11 @@
 </head>
 
 <body id="body" bgcolor="#FFA200" onload="Startup.init()">
-    <div style="height: 70%; display:block; padding: 50px;">
+    <div style="display:block; padding: 50px;">
         <img src="img/logo-white.png" width="20%" style="min-width:320px;">
     </div>
         
-    <div id="startup" style="display:block">
+    <div id="startup" style="display:none">
 	    <font class="username">Please enter an username:</font><br>
         <textarea name="playerName" class="usernameForm"></textarea><br>
         <button name="createGame" type="button" class="button">Create Game</button> <br>
@@ -49,9 +49,9 @@
         </table>
     </div>
     
-    <div id="canvasesForm" style="position: relative; display:none;">
-        <canvas id="canvasLayer0" width="512" height="512" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
-        <canvas id="canvasLayer1" width="512" height="512" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+    <div id="canvasesForm" width="auto" height="auto" style="position: relative; display:none;">
+        <canvas id="canvasLayer0" width="auto" height="auto" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+        <canvas id="canvasLayer1" width="auto" height="auto" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
     </div>
 </body>
 

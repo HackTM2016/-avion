@@ -10,12 +10,11 @@ var Startup = (function () {
         this.div = document.getElementById("startup");
     }
     Startup.init = function () {
-        // var game = new Game
-        // game.Init()
-        // if (game != null)
-        // {
-        //     return
-        // }
+        var game = new Game;
+        game.Init();
+        if (game != null) {
+            return;
+        }
         var startup = new Startup;
         startup.div.style.display = "block";
         var playerName = startup.div.children.namedItem("playerName");

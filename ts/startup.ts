@@ -13,12 +13,12 @@ class Startup
     div: HTMLElement = <HTMLElement>document.getElementById("startup")
 
     static init() : void {
-        // var game = new Game
-        // game.Init()
-        // if (game != null)
-        // {
-        //     return
-        // }
+        var game = new Game
+        game.Init()
+        if (game != null)
+        {
+            return
+        }
         var startup = new Startup
         startup.div.style.display = "block";
         
