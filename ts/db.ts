@@ -5,36 +5,38 @@
 // Septi DB: https://project-4810418174258671406.firebaseio.com/
 
 class GlobalFB {
-    static dataRef: Firebase = new Firebase('https://project-4810418174258671406.firebaseio.com/')
-    static curPlayer: Player = null
-    static curLobby: Lobby = null
-    static playerRef: Firebase = null
+    static dataRef: Firebase = new Firebase('https://incandescent-fire-3223.firebaseio.com/avion/')
+    static curPlayer: Player = null;
+    static curLobby: Lobby = null;
+    static lobbyRef: Firebase = null;
+    static playerRef: Firebase = null;
 }
 
 class PlayerAuthFB implements PlayerAuth {
-    playerRef: Firebase = GlobalFB.dataRef.child("Players");
-    callback: (success : boolean) => void = null
+    callback: (success : boolean) => void = null;
     
     public login(name:string, callback: (success : boolean) => void) : void {
         
         if (GlobalFB.curPlayer != null) {
-            // Already logged in or in loggin process, return error.
+            // Already logged in or in logging process, return error.
             if (callback) callback(false);
             return;
         }
         
         GlobalFB.curPlayer = new Player();
-        GlobalFB.curPlayer = {name:name, status:PlayerStatus.new, room:null};
-        this.callback = callback
-        
-        this.playerRef.child(name).transaction(
+        GlobalFB.curPlayer = {name:name, status:PlayerStatus.new, room:null}
+        GlobalFB.playerRef = GlobalFB.dataRef.child("Players").child(name);
+
+        this.callback = callback;
+
+        GlobalFB.playerRef.transaction(
             function(old_snapshot) {
                 // If user does not exist, add it
                 if (old_snapshot === null) {
-                    return {hit:{x:0,y:0},status:PlayerStatus.new}
+                    return {hit:{x:0,y:0},status:PlayerStatus.new};
                 } else {
                     // Otherwise return to fail the transaction
-                    return
+                    return;
                 }
             },
             (err, commited, snapshot)=>(this.onCommit(err, commited, snapshot)))
@@ -42,68 +44,58 @@ class PlayerAuthFB implements PlayerAuth {
     
     public logout() : void {
         // If not logged in, simply return
-        if (!GlobalFB.curPlayer) return
+        if (!GlobalFB.curPlayer) return;
         // Go offline to break all connections
         // Create new connection to start all over (goOnline it will recreate all observers)
-        GlobalFB.curPlayer = null
-        Firebase.goOffline();
-        GlobalFB.dataRef = new Firebase('https://project-4810418174258671406.firebaseio.com/')
-        this.playerRef = GlobalFB.dataRef.child("Players");
+        GlobalFB.curPlayer = null;
+        GlobalFB.playerRef.remove();
     }
     
    private onCommit(err, commited, snapshot) : void {
         if (err || !commited) {
-            GlobalFB.curPlayer = null
+            GlobalFB.curPlayer = null;
+            GlobalFB.playerRef = null;
             if (this.callback) {
                 this.callback(false)
             }
         } else {
             // Weird error, no global player found, remove FB entry and fail
-            if (GlobalFB.curLobby == null) {
-                this.playerRef.child(snapshot.key()).remove()
+            if (GlobalFB.playerRef == null ||
+                GlobalFB.curPlayer == null) {
+                GlobalFB.dataRef.child(snapshot.key()).remove();
                 if (this.callback) {
-                    this.callback(false)
+                    this.callback(false);
                 }
-            }
-            // All OK. Set onDisconect directive and callback true
-            this.playerRef.child(GlobalFB.curPlayer.name).onDisconnect().remove()
-            if (this.callback) {
-                this.callback(true)
+            } else {
+                // All OK. Set onDisconect directive and callback true
+                GlobalFB.playerRef.onDisconnect().remove();
+                if (this.callback) {
+                    this.callback(true);
+                }
             }
         }
     }  
 }
 
 class CreateGameFB implements CreateGame {
-    lobbyRef: Firebase = GlobalFB.dataRef.child("Rooms");
-    callback: (success : boolean) => void = null
+    callback: (success : boolean) => void = null;
     
     public create(board : Lobby, callback: (success : boolean) => void) : void {
-        // If already in a lobby, disconnect from there
-        if (GlobalFB.curLobby != null) {
-            this.lobbyRef.child(GlobalFB.curLobby.name)
-                .child("Players")
-                .child(GlobalFB.curPlayer.name).remove()
-        }
-        GlobalFB.curLobby = board
-        this.callback = callback
-        
-        this.lobbyRef.child(board.name).transaction(
+        GlobalFB.lobbyRef = GlobalFB.dataRef.child("Rooms").child(board.name);
+        GlobalFB.curLobby = board;
+        this.callback = callback;
+
+        GlobalFB.lobbyRef.transaction(
             function(old_snapshot) {
                 // If room does not exist, add it
                 if (old_snapshot === null) {
-                    var plr = {}
-                    plr[GlobalFB.curPlayer.name] = 'joined'
-                    return {Name:GlobalFB.curLobby.name,
-                            Status: LobbyStatusType.Open,
+                    return {Status: LobbyStatusType.Open,
                             MaxNrPlayer: GlobalFB.curLobby.maxNoPlayers,
                             PlainsPerPlayer: GlobalFB.curLobby.planesPerPlayer,
-                            MapSize:GlobalFB.curLobby.mapSize,
-                            CurNrPlayer: 1,
-                            Players:plr}
+                            MapSize:GlobalFB.curLobby.mapSize}
                 } else {
                     // Otherwise return to fail the transaction
-                    return
+                    return;
                 }
             },
             (err, commited, snapshot)=>(this.onCommit(err, commited, snapshot)))
@@ -111,27 +103,33 @@ class CreateGameFB implements CreateGame {
     
    private onCommit(err, commited, snapshot) : void {
         if (err || !commited) {
-            GlobalFB.curLobby = null
+            GlobalFB.curLobby = null;
+            GlobalFB.lobbyRef = null;
             if (this.callback) {
                 this.callback(false)
             }
         } else {
             // Weird error, no global lobby/player found, remove FB entry and fail
-            if (GlobalFB.curLobby == null ||
-                GlobalFB.curPlayer == null) {
-                this.lobbyRef.child(snapshot.key()).remove()
+            if (GlobalFB.lobbyRef == null ||
+                GlobalFB.curLobby == null ||
+                GlobalFB.playerRef == null) {
+                GlobalFB.dataRef.child("Rooms").child(snapshot.key()).remove()
                 if (this.callback) {
                     this.callback(false)
                 }
-            }
-            // All OK. Set onDisconect directive and callback true
-            this.lobbyRef.child(GlobalFB.curLobby.name)
-                .child("Players").child(GlobalFB.curPlayer.name)
-                .onDisconnect().remove()
-            /* or disconnect lobby if leader leaves:
-            this.lobbyRef.child(GlobalFB.curLobby.name).onDisconnect().remove() */
-            if (this.callback) {
-                this.callback(true)
+            } else {
+                // add current lobby as the current players joined room
+                // no protection as we should not have other sessions with current player
+                GlobalFB.playerRef.child("room").set(GlobalFB.curLobby.name);
+
+                // All OK. Set onDisconect directive and callback true
+                GlobalFB.playerRef.child("room").onDisconnect().remove();
+                /* or disconnect lobby if leader leaves:
+                 this.lobbyRef.onDisconnect().remove() */
+
+                if (this.callback) {
+                    this.callback(true);
+                }
             }
         }
     }  
@@ -284,35 +282,83 @@ class SetupGameFB implements SetupGame {
     }
 }
 
+class GameEventsFB implements GameEvents {
+    onAttack: (coord:vec2, playerName : string) => GameEventType = null;
+    onPlayerDrop: (playerName:string) => void = null;
+    onGameChange: (status:GameStatusType) => void = null;
+    
+    public init(onAttack: (coord:vec2, playerName : string) => GameEventType,
+                onPlayerDrop: (playerName:string) => void,
+                onGameChange: (status:GameStatusType) => void) {
+        this.onAttack = onAttack;
+        this.onPlayerDrop = onPlayerDrop;
+        this.onGameChange = onGameChange;
+        GlobalFB.dataRef.child("Shoot").this.
+        GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", this.playerDataChange.bind(this));
+        GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", this.playerDrop.bind(this));
+    }
+
+    public shoot(pos:vec2) {
+        
+    }
+    
+    private playerDataChange(snapshot) : void {
+        var playerName = snapshot.key();
+        var playerData = snapshot.val();
+        if (playerData.room == GlobalFB.curLobby.name){
+            
+        }
+            
+    }
+    
+    private playerDrop(snapshot) : void {
+        var playerName = snapshot.key();
+        var playerData = snapshot.val();
+        if (playerData.room == GlobalFB.curLobby.name){
+        }
+    }
+    
+    
+}
+
 //
 //  For testing only !!!
 //
 
 class TestFB {
+    static onLoginCommit(ok:boolean) : void {
+        if (ok) {console.log("Login success!")}
+        else {console.log("Login failed!")}
+        TestFB.CreateTest();
+    }
+    
     static onCreateCommit(ok:boolean) : void {
         if (ok) {console.log("Lobby create success!")}
         else {console.log("Lobby create failed!")}
     }
     
-    static onLoginCommit(ok:boolean) : void {
-        if (ok) {console.log("Login success!")}
-        else {console.log("Login failed!")}
+    static CreateTest() : void {
+        var plLobby = new CreateGameFB()
+
+        var lb1 = new Lobby();
+        lb1.name = "testLobby5" //leave the rest default
+        console.log("Attempt create testLobby5 - expect ok")
+        plLobby.create(lb1, TestFB.onCreateCommit)
+
+        /*lb1.maxNoPlayers = 6; //leave the rest default
+        console.log("Attempt create testLobby5 - expect fail")
+        plLobby.create(lb1, TestFB.onCreateCommit)*/
     }
 
-    public LoginTest() {
+    static LoginTest() {
+        
         var plAuth = new PlayerAuthFB()
 
-        console.log("Attempt login with Mihai - expect ok")
-        plAuth.login("Mihai", TestFB.onLoginCommit)
+        console.log("Attempt login with Mihai2 - expect ok")
+        plAuth.login("Mihai2", TestFB.onLoginCommit)
 
-        console.log("Attempt login with Mumu - expect fail")
-        plAuth.login("Mumu", TestFB.onLoginCommit)
-
-        var pl1:Player=GlobalFB.curPlayer
-         GlobalFB.curPlayer=null
-         console.log("Attempt login with Mihai - expect fail")
-         plAuth.login("Mihai", TestFB.onLoginCommit)
-         GlobalFB.curPlayer = pl1
+        /*console.log("Attempt login with Mumu - expect fail")
+        plAuth.login("Mumu2", this.onLoginCommit)*/
 
         //console.log("Logoff from Mihai")
         //plAuth.logout()
@@ -322,26 +368,11 @@ class TestFB {
          plAuth.login("Mumu", TestFB.onLoginCommit)
          GlobalFB.curPlayer = pl1*/
     }
-
-    public CreateTest() {
-        var plLobby = new CreateGameFB()
-
-        var lb1 = new Lobby()
-        lb1.name = "testLobby1" //leave the rest default
-        console.log("Attempt create testLobby1 - expect ok")
-        plLobby.create(lb1, TestFB.onCreateCommit)
-
-        lb1.name = "testLobby2"
-        lb1.maxNoPlayers = 6 //leave the rest default
-        console.log("Attempt create testLobby2 - expect ok")
-        plLobby.create(lb1, TestFB.onCreateCommit)
-    }
-
-    public run() {
-        this.LoginTest();
-        setTimeout(this.CreateTest(), 5000);
+    
+    public run() :void {
+        TestFB.LoginTest();
     }
 }
 
-var autoTest = new TestFB
+var autoTest = new TestFB()
 autoTest.run()
