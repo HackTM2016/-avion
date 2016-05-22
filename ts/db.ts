@@ -24,7 +24,7 @@ class PlayerAuthFB implements PlayerAuth {
         }
         
         GlobalFB.curPlayer = new Player();
-        GlobalFB.curPlayer = {name:name, status:PlayerStatus.new}
+        GlobalFB.curPlayer = {name:name, status:PlayerStatus.new, room:null};
         this.callback = callback
         
         this.playerRef.child(name).transaction(
@@ -188,24 +188,13 @@ class JoinGameFB implements JoinGame
     }
     
     join(name : string, joined: (success : boolean) => void) : void {
-        var roomsRef = GlobalFB.dataRef.child('Rooms');
-        var joiningRoomRef = roomsRef.child(name);
-        if (joiningRoomRef) {
-            var roomPlayersRef = joiningRoomRef.child("Players");
-            joiningRoomRef.limitToFirst(1).once("child_added", function(snapshot) {
-                roomPlayersRef.push({'Name':GlobalFB.curPlayer.name});
-                joiningRoomRef.update({'CurNrPlayer':(snapshot.val().CurNrPlayer)});
-                GlobalFB.playerRef.limitToFirst(1).once("child_added", function(snapshot) {
-                    GlobalFB.playerRef.update({'Status':'joined'}, function(error) {
-                        if (error) {
-                            joined(false);
-                        } else {
-                            joined(true);
-                        }
-                    });
-                });
-            });
-        }                
+        GlobalFB.playerRef.update({'Status':PlayerStatus.inRoom, 'Room':name}, function(error) {
+            if (error) {
+                joined(false);
+            } else {
+                joined(true);
+            }
+        });                
     }
 }
 
@@ -213,6 +202,8 @@ class SetupGameFB implements SetupGame {
     private onAdd: (player : Player) => void;
     private onRemove: (name : string) => void;
     private onUpdate: (player : Player) => void;
+    private roomPlayers: Array<Player> = new Array<Player>();
+    private onStartGame: () => void;
     
     init(onAdd: (player : Player) => void, 
          onRemove: (name : string) => void,
@@ -223,9 +214,62 @@ class SetupGameFB implements SetupGame {
         this.onUpdate = onUpdate;
     }
     
+    checkIfAllReady () : boolean
+    {
+        if (this.roomPlayers.length > 0) {
+            for (var i = 0; this.roomPlayers.length > i; i++)
+            {
+                var player = this.roomPlayers[i];
+                if (player.status != PlayerStatus.ready) {
+                    return false;
+                }
+            }
+        }
+        
+        this.onStartGame();
+        return true;
+    }
+    
+    public addPlayerToRoom : (snapshot : FirebaseDataSnapshot) => void = function(snapshot) {
+        var player = new Player();
+        player.name = snapshot.val().Name;
+        player.room = snapshot.val().Room;
+        player.status = snapshot.val().Status;
+        this.roomPlayers.push(player);
+        this.checkIfAllReady();
+    };
+    
+    public removePlayerFromRoom : (snapshot : FirebaseDataSnapshot) => void = function(snapshot) {
+        var player = new Player();
+        for (var i = 0; i < this.roomPlayers; i++)
+        {
+            if (this.roomPlayers[i].name == snapshot.key()) {
+                this.roomPlayers.splice(i,1);
+                break;
+            }   
+        }
+        this.checkIfAllReady();
+    };
+    
+    public changePlayerFromRoom : (snapshot : FirebaseDataSnapshot) => void = function(snapshot) {
+        var player = new Player();
+        for (var i = 0; i < this.roomPlayers; i++)
+        {
+            if (this.roomPlayers[i].name == snapshot.key()) {
+                if (this.roomPlayers[i].status = snapshot.val().Status) {
+                    break;
+                }
+            }   
+        }
+        
+        this.onStartGame();
+        this.checkIfAllReady();
+    };
+    
     ready(callback: (success : boolean) => void, 
           onStartGame: () => void) : void
     {
+        this.onStartGame = onStartGame;
         GlobalFB.playerRef.update({'Status':PlayerStatus.ready}, function(error) {
             if (error) {
                 callback(false);
@@ -233,8 +277,10 @@ class SetupGameFB implements SetupGame {
                 callback(true);
             }
         });
-        
-        
+        var playersRef = GlobalFB.dataRef.child('Players');
+        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_added", this.addPlayerToRoom);      
+        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", this.removePlayerFromRoom);
+        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", this.changePlayerFromRoom);
     }
 }
 
@@ -247,6 +293,7 @@ class TestFB {
         if (ok) {console.log("Lobby create success!")}
         else {console.log("Lobby create failed!")}
     }
+    
     static onLoginCommit(ok:boolean) : void {
         if (ok) {console.log("Login success!")}
         else {console.log("Login failed!")}
