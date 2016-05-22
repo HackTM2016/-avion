@@ -5,7 +5,7 @@
 var GlobalFB = (function () {
     function GlobalFB() {
     }
-    GlobalFB.dataRef = new Firebase('https://incandescent-fire-3223.firebaseio.com/avion/');
+    GlobalFB.dataRef = new Firebase('https://project-4810418174258671406.firebaseio.com/');
     GlobalFB.curPlayer = null;
     GlobalFB.curLobby = null;
     GlobalFB.playerRef = null;
@@ -46,7 +46,7 @@ var PlayerAuthFB = (function () {
         // Create new connection to start all over (goOnline it will recreate all observers)
         GlobalFB.curPlayer = null;
         Firebase.goOffline();
-        GlobalFB.dataRef = new Firebase('https://incandescent-fire-3223.firebaseio.com/avion/');
+        GlobalFB.dataRef = new Firebase('https://project-4810418174258671406.firebaseio.com/');
         this.playerRef = GlobalFB.dataRef.child("Players");
     };
     PlayerAuthFB.prototype.onCommit = function (err, commited, snapshot) {

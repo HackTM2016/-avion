@@ -18,6 +18,15 @@ enum GamePlayerState {
     Dead
 }
 
+var planesSrcs = ['img/avion-up.png', 'img/avion-down.png', 'img/avion-left.png', 'img/avion-right.png']
+
+enum PlaneOrientation {
+    Up,
+    Down,
+    Left,
+    Right
+}
+
 function InitGame(info: Lobby) : void {
     var game = new Game
     game.info = info
@@ -56,7 +65,7 @@ class Game {
     grayX: HTMLImageElement
     greenX: HTMLImageElement
 
-    airplanePosition: any = { x: 0, y: 0 };
+    airplanePosition: any = { x: 0, y: 0 , orientation: PlaneOrientation.Up};
     gamePlayerState: GamePlayerState = GamePlayerState.Initial;
 
     info : Lobby
@@ -92,7 +101,7 @@ class Game {
         game.gamePlayerState = GamePlayerState.Initial;
         
         game.bgImage.src = 'img/dot.png';
-        game.airplaneImage.src = 'img/avion.png';
+        game.airplaneImage.src = planesSrcs[0];
         game.hoverGridImage.src = 'img/dot-hover.png';
 
         game.redX.src = 'img/red-x.png';
@@ -148,6 +157,13 @@ class Game {
             }
             
         }, false);
+        
+        game.canvasLayer1.addEventListener('keypress', function (evt) {
+            var key = evt.key;
+            
+            if (game.gamePlayerState == GamePlayerState.Initial) {
+            }
+        }, false)
 
     }
 

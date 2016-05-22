@@ -13,6 +13,14 @@ var GamePlayerState;
     GamePlayerState[GamePlayerState["Alive"] = 1] = "Alive";
     GamePlayerState[GamePlayerState["Dead"] = 2] = "Dead";
 })(GamePlayerState || (GamePlayerState = {}));
+var planesSrcs = ['img/avion-up.png', 'img/avion-down.png', 'img/avion-left.png', 'img/avion-right.png'];
+var PlaneOrientation;
+(function (PlaneOrientation) {
+    PlaneOrientation[PlaneOrientation["Up"] = 0] = "Up";
+    PlaneOrientation[PlaneOrientation["Down"] = 1] = "Down";
+    PlaneOrientation[PlaneOrientation["Left"] = 2] = "Left";
+    PlaneOrientation[PlaneOrientation["Right"] = 3] = "Right";
+})(PlaneOrientation || (PlaneOrientation = {}));
 function InitGame(info) {
     var game = new Game;
     game.info = info;
@@ -32,7 +40,7 @@ function ResizeGame() {
 }
 var Game = (function () {
     function Game() {
-        this.airplanePosition = { x: 0, y: 0 };
+        this.airplanePosition = { x: 0, y: 0, orientation: PlaneOrientation.Up };
         this.gamePlayerState = GamePlayerState.Initial;
         this.gameEvents = new GameEventsMock;
     }
@@ -56,7 +64,7 @@ var Game = (function () {
         game.greenX = new Image();
         game.gamePlayerState = GamePlayerState.Initial;
         game.bgImage.src = 'img/dot.png';
-        game.airplaneImage.src = 'img/avion.png';
+        game.airplaneImage.src = planesSrcs[0];
         game.hoverGridImage.src = 'img/dot-hover.png';
         game.redX.src = 'img/red-x.png';
         game.grayX.src = 'img/gray-x.png';
@@ -96,6 +104,11 @@ var Game = (function () {
             else {
                 // Player is dead, do nothing?
                 alert("Game Over");
+            }
+        }, false);
+        game.canvasLayer1.addEventListener('keypress', function (evt) {
+            var key = evt.key;
+            if (game.gamePlayerState == GamePlayerState.Initial) {
             }
         }, false);
     };
