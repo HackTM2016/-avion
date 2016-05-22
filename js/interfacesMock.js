@@ -58,11 +58,13 @@ var GameEventsMock = (function () {
         effect(pos, ionHit, "Ion");
         if (ionHit == GameEventType.Kill) {
             this.ionAlive = false;
+            document.getElementById("ion").style.color = "#FF0000";
         }
         var blueHit = JudgeHit(pos, this.bluePlanePos, this.blueOrientation);
         effect(pos, blueHit, "Blue");
         if (blueHit == GameEventType.Kill) {
             this.blueAlive = false;
+            document.getElementById("blue").style.color = "#FF0000";
         }
         if (this.ionAlive) {
             this.onAttack({ x: Math.floor(Math.random() * boardSize.x), y: Math.floor(Math.random() * boardSize.y) }, "Ion");
