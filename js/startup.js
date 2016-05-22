@@ -7,22 +7,16 @@ var Startup = (function () {
     function Startup() {
         this.playerName = "";
         this.playerAuth = new PlayerAuthMock;
-        this.div = document.getElementById("startup");
     }
     Startup.init = function () {
-        // var game = new Game
-        // game.Init()
-        // if (game != null)
-        // {
-        //     return
-        // }
         var startup = new Startup;
-        startup.div.style.display = "block";
-        var playerName = startup.div.children.namedItem("playerName");
+        var div = document.getElementById("startup");
+        SetVisibleDiv("startup");
+        var playerName = div.children.namedItem("playerName");
         playerName.onclick = function () { startup.changeName(this); };
-        var createGame = startup.div.children.namedItem("createGame");
+        var createGame = div.children.namedItem("createGame");
         createGame.onclick = function () { startup.createGame(this); };
-        var joinGame = startup.div.children.namedItem("joinGame");
+        var joinGame = div.children.namedItem("joinGame");
         joinGame.onclick = function () { startup.joinGame(this); };
     };
     Startup.prototype.changeName = function (elem) {
@@ -38,7 +32,7 @@ var Startup = (function () {
     };
     Startup.prototype.createSelector = function (success, move) {
         if (success) {
-            this.div.style.display = "none";
+            SetInvisibleDiv("startup");
             move();
         }
         else {

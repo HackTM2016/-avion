@@ -19,7 +19,8 @@ var GameCreationController = (function () {
         var name = document.getElementsByName("gameName").item(0).value;
         var planesPerPlayer = document.getElementsByName("planesCount").item(0).value;
         var maxPlayerCount = document.getElementsByName("maxPlayerCount").item(0).value;
-        SetVisibleDiv("canvasesForm");
+        SetInvisibleDiv("gameCreationForm");
+        InitGame(info);
     };
     return GameCreationController;
 }());
