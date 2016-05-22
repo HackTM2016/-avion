@@ -120,10 +120,10 @@ class CreateGameFB implements CreateGame {
             } else {
                 // add current lobby as the current players joined room
                 // no protection as we should not have other sessions with current player
-                GlobalFB.playerRef.child("room").set(GlobalFB.curLobby.name);
+                GlobalFB.playerRef.child("Room").set(GlobalFB.curLobby.name);
 
                 // All OK. Set onDisconect directive and callback true
-                GlobalFB.playerRef.child("room").onDisconnect().remove();
+                GlobalFB.playerRef.child("Room").onDisconnect().remove();
                 /* or disconnect lobby if leader leaves:
                  this.lobbyRef.onDisconnect().remove() */
 
@@ -296,7 +296,7 @@ class GameEventsFB implements GameEvents {
         this.onAttack = onAttack;
         this.onPlayerDrop = onPlayerDrop;
         this.onGameChange = onGameChange;
-        GlobalFB.dataRef.child("Shoot").on("child_changed",(snapshot)=>(this.onShot(snapshot)));
+        GlobalFB.dataRef.child("Shot").on("child_changed",(snapshot)=>(this.onShot(snapshot)));
         GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", (snapshot)=>(this.playerDataChange(snapshot)));
         GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", (snapshot)=>(this.playerDrop(snapshot)));
     }
