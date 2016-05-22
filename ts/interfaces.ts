@@ -34,6 +34,7 @@ class vec2
 class Player {
     name:string;
     status:string;
+    room:string;
 }
 
 interface PlayerAuth
