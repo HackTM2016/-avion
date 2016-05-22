@@ -120,9 +120,9 @@ var CreateGameFB = (function () {
             else {
                 // add current lobby as the current players joined room
                 // no protection as we should not have other sessions with current player
-                GlobalFB.playerRef.child("room").set(GlobalFB.curLobby.name);
+                GlobalFB.playerRef.child("Room").set(GlobalFB.curLobby.name);
                 // All OK. Set onDisconect directive and callback true
-                GlobalFB.playerRef.child("room").onDisconnect().remove();
+                GlobalFB.playerRef.child("Room").onDisconnect().remove();
                 /* or disconnect lobby if leader leaves:
                  this.lobbyRef.onDisconnect().remove() */
                 if (this.callback) {
@@ -258,26 +258,46 @@ var GameEventsFB = (function () {
         this.onAttack = null;
         this.onPlayerDrop = null;
         this.onGameChange = null;
+        this.onEvent = null;
     }
     GameEventsFB.prototype.init = function (onAttack, onPlayerDrop, onGameChange) {
+        var _this = this;
         this.onAttack = onAttack;
         this.onPlayerDrop = onPlayerDrop;
         this.onGameChange = onGameChange;
+<<<<<<< HEAD
         GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", this.playerDataChange.bind(this));
         GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", this.playerDrop.bind(this));
+=======
+        GlobalFB.dataRef.child("Shot").on("child_changed", function (snapshot) { return (_this.onShot(snapshot)); });
+        GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", function (snapshot) { return (_this.playerDataChange(snapshot)); });
+        GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", function (snapshot) { return (_this.playerDrop(snapshot)); });
     };
-    GameEventsFB.prototype.shoot = function (pos) {
+    GameEventsFB.prototype.shoot = function (pos, effect) {
+        this.onEvent = effect;
+        GlobalFB.dataRef.child("Shot").set({ who: GlobalFB.curPlayer.name, room: GlobalFB.curLobby.name, x: pos.x, y: pos.y });
+>>>>>>> 910491fb41ec66e24ff83daea342ebb8ff70bb78
+    };
+    GameEventsFB.prototype.onShot = function (snapshot) {
+        var shotData = snapshot.val();
+        if (shotData.room == GlobalFB.curLobby.name &&
+            shotData.player != GlobalFB.curPlayer.name) {
+            var resp = this.onAttack({ x: shotData.x, y: shotData.y }, shotData.who);
+            GlobalFB.playerRef.update({ Hit: { x: shotData.x, y: shotData.y, who: shotData.player, type: resp } });
+        }
     };
     GameEventsFB.prototype.playerDataChange = function (snapshot) {
         var playerName = snapshot.key();
         var playerData = snapshot.val();
         if (playerData.room == GlobalFB.curLobby.name) {
+            this.onEvent({ x: playerData.Hit.x, y: playerData.Hit.y }, playerData.Hit.type, playerName);
         }
     };
     GameEventsFB.prototype.playerDrop = function (snapshot) {
         var playerName = snapshot.key();
         var playerData = snapshot.val();
         if (playerData.room == GlobalFB.curLobby.name) {
+            this.onPlayerDrop(playerName);
         }
     };
     return GameEventsFB;
@@ -306,6 +326,9 @@ var TestFB = (function () {
         }
     };
     TestFB.CreateTest = function () {
+        for (var i = 0; i < 10000; i++) {
+            i = i + 1;
+        }
         var plLobby = new CreateGameFB();
         var lb1 = new Lobby();
         lb1.name = "testLobby5"; //leave the rest default
@@ -328,8 +351,15 @@ var TestFB = (function () {
          plAuth.login("Mumu", TestFB.onLoginCommit)
          GlobalFB.curPlayer = pl1*/
     };
+    TestFB.PlayTest = function () {
+        for (var i = 0; i < 10000; i++) {
+            i = i + 1;
+        }
+    };
     TestFB.prototype.run = function () {
         TestFB.LoginTest();
+        setTimeout(TestFB.CreateTest, 5000);
+        setTimeout(TestFB.PlayTest, 5000);
     };
     return TestFB;
 }());
@@ -413,6 +443,11 @@ var SeptiTestFB = (function () {
     };
     return SeptiTestFB;
 }());
+<<<<<<< HEAD
 var autoTest = new TestFB();
 autoTest.run();
+=======
+//var autoTest = new TestFB()
+//autoTest.run()
+>>>>>>> 910491fb41ec66e24ff83daea342ebb8ff70bb78
 //# sourceMappingURL=db.js.map

@@ -120,10 +120,10 @@ class CreateGameFB implements CreateGame {
             } else {
                 // add current lobby as the current players joined room
                 // no protection as we should not have other sessions with current player
-                GlobalFB.playerRef.child("room").set(GlobalFB.curLobby.name);
+                GlobalFB.playerRef.child("Room").set(GlobalFB.curLobby.name);
 
                 // All OK. Set onDisconect directive and callback true
-                GlobalFB.playerRef.child("room").onDisconnect().remove();
+                GlobalFB.playerRef.child("Room").onDisconnect().remove();
                 /* or disconnect lobby if leader leaves:
                  this.lobbyRef.onDisconnect().remove() */
 
@@ -288,6 +288,7 @@ class GameEventsFB implements GameEvents {
     onAttack: (coord:vec2, playerName : string) => GameEventType = null;
     onPlayerDrop: (playerName:string) => void = null;
     onGameChange: (status:GameStatusType) => void = null;
+    onEvent: (coord:vec2, type: GameEventType, playerName : string) => void = null;
     
     public init(onAttack: (coord:vec2, playerName : string) => GameEventType,
                 onPlayerDrop: (playerName:string) => void,
@@ -295,19 +296,31 @@ class GameEventsFB implements GameEvents {
         this.onAttack = onAttack;
         this.onPlayerDrop = onPlayerDrop;
         this.onGameChange = onGameChange;
-        GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", this.playerDataChange.bind(this));
-        GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", this.playerDrop.bind(this));
+        GlobalFB.dataRef.child("Shot").on("child_changed",(snapshot)=>(this.onShot(snapshot)));
+        GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", (snapshot)=>(this.playerDataChange(snapshot)));
+        GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", (snapshot)=>(this.playerDrop(snapshot)));
     }
 
-    public shoot(pos:vec2) {
-        
+    public shoot(pos:vec2,
+                 effect: (coord:vec2, type: GameEventType, playerName : string) => void) {             
+        this.onEvent = effect;
+        GlobalFB.dataRef.child("Shot").set({who:GlobalFB.curPlayer.name, room:GlobalFB.curLobby.name, x:pos.x, y:pos.y});
+    }
+    
+    private onShot(snapshot) : void {
+        var shotData = snapshot.val();
+        if (shotData.room == GlobalFB.curLobby.name &&
+            shotData.player != GlobalFB.curPlayer.name) {
+            var resp:GameEventType = this.onAttack({x:shotData.x, y:shotData.y},shotData.who);
+            GlobalFB.playerRef.update({Hit: {x:shotData.x, y:shotData.y, who:shotData.player, type:resp}});
+        }
     }
     
     private playerDataChange(snapshot) : void {
         var playerName = snapshot.key();
         var playerData = snapshot.val();
         if (playerData.room == GlobalFB.curLobby.name){
-            
+            this.onEvent({x:playerData.Hit.x, y:playerData.Hit.y}, playerData.Hit.type, playerName);
         }
             
     }
@@ -316,10 +329,9 @@ class GameEventsFB implements GameEvents {
         var playerName = snapshot.key();
         var playerData = snapshot.val();
         if (playerData.room == GlobalFB.curLobby.name){
+            this.onPlayerDrop(playerName);
         }
     }
-    
-    
 }
 
 //
@@ -339,6 +351,8 @@ class TestFB {
     }
     
     static CreateTest() : void {
+        for (var i=0; i<10000; i++) {i=i+1;}
+        
         var plLobby = new CreateGameFB()
 
         var lb1 = new Lobby();
@@ -370,8 +384,14 @@ class TestFB {
          GlobalFB.curPlayer = pl1*/
     }
     
+    static PlayTest() {
+        for (var i=0; i<10000; i++) {i=i+1;}
+    }
+    
     public run() :void {
         TestFB.LoginTest();
+        setTimeout(TestFB.CreateTest, 5000);
+        setTimeout(TestFB.PlayTest, 5000);
     }
 }
 
@@ -458,6 +478,7 @@ class SeptiTestFB {
         this.LoginTest();
     }
 }
-var autoTest = new TestFB()
-autoTest.run()
+
+//var autoTest = new TestFB()
+//autoTest.run()
 

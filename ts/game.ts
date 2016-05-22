@@ -259,9 +259,11 @@ class Game {
 
         switch (type) {
             case GameEventType.Kill:
+                this.drawTileImage(this.contextLayer1, this.enemyHitX, coord);
                 this.gamePlayerState = GamePlayerState.Dead
                 this.status = GameStatusType.OverLost
                 this.endGame()
+                break;
             case GameEventType.Hit:
                 this.drawTileImage(this.contextLayer1, this.enemyHitX, coord);
                 break;
