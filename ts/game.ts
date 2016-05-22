@@ -196,26 +196,22 @@ class Game {
         }
     }
 
-    judgeHit(hitCoord: vec2): GameEventType {
+    judgeHit(hitCoord: vec2, planeCoord: vec2): GameEventType {
 
-        var actualHitCoord = { x: hitCoord.x * tileSize, y: hitCoord.y * tileSize };
+        if (hitCoord.x >= planeCoord.x && hitCoord.x < (planeCoord.x + 5) &&
+            hitCoord.y >= planeCoord.y && hitCoord.y < (planeCoord.y + 4)) {
 
-        // Get the pixel color from Layer1
-        var pixelData = this.contextLayer1.getImageData(actualHitCoord.x, actualHitCoord.y, 1, 1).data;
-        // Pixel data is RGBA, 8bpp
-        var alpha = pixelData[3];
+            var planeShape =   [[0, 0, 2, 0, 0],
+                                [1, 1, 1, 1, 1],
+                                [0, 0, 1, 0, 0],
+                                [0, 1, 1, 1, 0]];
 
-        if (alpha <= 127) {
-            return GameEventType.Miss;
+            var detailHitCoord = { x: hitCoord.x - planeCoord.x, y: hitCoord.y - planeCoord.y };
+            
+            return planeShape[detailHitCoord.y][detailHitCoord.x];
         }
-        else {
-            if (alpha < 255) {
-                return GameEventType.Kill;
-            }
-            else {
-                return GameEventType.Hit;
-            }
-        }
+        
+        return GameEventType.Miss;
     }
 
     shotResponse(coord: vec2, type: GameEventType, playerName: string): void {
@@ -230,7 +226,7 @@ class Game {
         }
     }
     onAttack(coord: vec2, playerName: string): GameEventType {
-        var type: GameEventType = this.judgeHit(coord);
+        var type: GameEventType = this.judgeHit(coord, this.airplanePosition);
 
         switch (type) {
             case GameEventType.Hit:
