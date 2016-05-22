@@ -290,3 +290,34 @@ if it's not present, don't show loader */
 	z-index: 9999;
 	background: url(images/loader-64x/Preloader_2.gif) center no-repeat #fff;
 }
+
+.buttonClose,
+.buttonClose:visited {
+	font-family: "FiraSans";
+    width: 90px;
+    background-color: #F2120C;
+    border: none;
+    color: #ffffff;
+    
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 17px;
+    margin: 8px 8px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -o-border-radius: 100px;
+    box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+    cursor: pointer;
+    cursor: hand;
+    outline: none;
+}
+
+.buttonClose:hover {
+	background: #FF2727;
+    color: #ffffff;
+}
