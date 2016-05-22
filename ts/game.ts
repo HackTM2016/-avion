@@ -231,7 +231,7 @@ class Game {
         }
     }
     onAttack(coord: vec2, playerName: string): GameEventType {
-        var type: GameEventType = JudgeHit(coord, this.airplanePosition);
+        var type: GameEventType = JudgeHit(coord, this.airplanePosition, this.airplaneOrientation);
 
         switch (type) {
             case GameEventType.Hit:
