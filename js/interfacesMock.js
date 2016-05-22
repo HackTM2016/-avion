@@ -41,8 +41,8 @@ var SetupGameMock = (function () {
 var GameEventsMock = (function () {
     function GameEventsMock() {
         this.shotNumber = 100;
-        this.ionPlanePos = { x: Math.floor(Math.random() * 14), y: Math.floor(Math.random() * 14) };
-        this.bluePlanePos = { x: Math.floor(Math.random() * 14), y: Math.floor(Math.random() * 14) };
+        this.ionPlanePos = { x: Math.floor(Math.random() * (boardSize.x - 5)), y: Math.floor(Math.random() * (boardSize.y - 4)) };
+        this.bluePlanePos = { x: Math.floor(Math.random() * (boardSize.x - 5)), y: Math.floor(Math.random() * (boardSize.y - 4)) };
         this.ionAlive = true;
         this.blueAlive = true;
     }
@@ -52,21 +52,21 @@ var GameEventsMock = (function () {
         this.onGameChange = onGameChange;
     };
     GameEventsMock.prototype.shoot = function (pos, effect) {
-        var ionHit = hitPlane(this.ionPlanePos, pos);
+        var ionHit = JudgeHit(pos, this.ionPlanePos);
         effect(pos, ionHit, "Ion");
         if (ionHit == GameEventType.Kill) {
             this.ionAlive = false;
         }
-        var blueHit = hitPlane(this.bluePlanePos, pos);
+        var blueHit = JudgeHit(pos, this.bluePlanePos);
         effect(pos, blueHit, "Blue");
         if (blueHit == GameEventType.Kill) {
             this.blueAlive = false;
         }
         if (this.ionAlive) {
-            this.onAttack({ x: Math.floor(Math.random() * 19), y: Math.floor(Math.random() * 19) }, "Ion");
+            this.onAttack({ x: Math.floor(Math.random() * boardSize.x), y: Math.floor(Math.random() * boardSize.y) }, "Ion");
         }
         if (this.blueAlive) {
-            this.onAttack({ x: Math.floor(Math.random() * 19), y: Math.floor(Math.random() * 19) }, "Blue");
+            this.onAttack({ x: Math.floor(Math.random() * boardSize.x), y: Math.floor(Math.random() * boardSize.y) }, "Blue");
         }
         if (!this.blueAlive && !this.ionAlive) {
             this.onGameChange(GameStatusType.OverSuccess);
@@ -74,7 +74,4 @@ var GameEventsMock = (function () {
     };
     return GameEventsMock;
 }());
-function hitPlane(planePos, hitPos) {
-    return GameEventType.Miss;
-}
 //# sourceMappingURL=interfacesMock.js.map

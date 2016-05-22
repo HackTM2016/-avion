@@ -8,7 +8,7 @@ var originalTileSize = 32;
 var theoreticalTileSize = 16;
 var tileSize = theoreticalTileSize;
 
-var boardSize = { x: 19, y: 19 }
+var boardSize = { x: 10, y: 10 }
 
 var globalGame = null
 
@@ -105,12 +105,6 @@ class Game {
         game.enemyMissX.src = 'img/enemy-hit.png';
         game.enemyHitX.src = 'img/enemy-damage.png';
 
-        game.killX.crossOrigin = "Anonymous";
-        game.missX.crossOrigin = "Anonymous";
-        game.hitX.crossOrigin = "Anonymous";
-        game.enemyMissX.crossOrigin = "Anonymous";
-        game.enemyHitX.crossOrigin = "Anonymous";
-
         // Handlers
         game.bgImage.onload = function () {
             // Draw grid manually (needs to be done manually for scaling)
@@ -155,7 +149,6 @@ class Game {
             }
             else {
                 // Player is dead, do nothing?
-                alert("Game Over");
             }
 
         }, false);
@@ -211,8 +204,11 @@ class Game {
         var type: GameEventType = JudgeHit(coord, this.airplanePosition);
 
         switch (type) {
-            case GameEventType.Hit:
             case GameEventType.Kill:
+                this.gamePlayerState = GamePlayerState.Dead
+                this.status = GameStatusType.OverLost
+                this.endGame()
+            case GameEventType.Hit:
                 this.drawTileImage(this.contextLayer1, this.enemyHitX, coord);
                 break;
             case GameEventType.Miss:
@@ -226,7 +222,21 @@ class Game {
     onPlayerDrop(playerName: string): void {
 
     }
+    status : GameStatusType = GameStatusType.Playing
     onGameChange(status: GameStatusType): void {
         this.gamePlayerState = GamePlayerState.Dead
+        this.endGame()
+    }
+    
+    endGame() : void {
+        if(this.status == GameStatusType.OverSuccess || this.status == GameStatusType.Playing) {
+            alert("You win!");
+        }
+        else if(this.status == GameStatusType.OverLost) {
+            alert("Game Over!");
+        }
+        else if(this.status == GameStatusType.Disconnected) {
+            alert("Disconnected!");
+        }
     }
 }

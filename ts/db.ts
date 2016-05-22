@@ -343,5 +343,5 @@ class TestFB {
     }
 }
 
-var autoTest = new TestFB
-autoTest.run()
+// var autoTest = new TestFB
+// autoTest.run()
