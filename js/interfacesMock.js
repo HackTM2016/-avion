@@ -41,26 +41,40 @@ var SetupGameMock = (function () {
 var GameEventsMock = (function () {
     function GameEventsMock() {
         this.shotNumber = 100;
+        this.ionPlanePos = { x: Math.floor(Math.random() * 14), y: Math.floor(Math.random() * 14) };
+        this.bluePlanePos = { x: Math.floor(Math.random() * 14), y: Math.floor(Math.random() * 14) };
+        this.ionAlive = true;
+        this.blueAlive = true;
     }
     GameEventsMock.prototype.init = function (onAttack, onPlayerDrop, onGameChange) {
-        this.shotNumber = 40;
         this.onAttack = onAttack;
         this.onPlayerDrop = onPlayerDrop;
         this.onGameChange = onGameChange;
     };
     GameEventsMock.prototype.shoot = function (pos, effect) {
-        effect(pos, Math.floor(Math.random() * 3), "Ion");
-        effect(pos, Math.floor(Math.random() * 3), "Blue");
-        this.onAttack({ x: Math.floor(Math.random() * 19), y: Math.floor(Math.random() * 19) }, "Ion");
-        this.onAttack({ x: Math.floor(Math.random() * 19), y: Math.floor(Math.random() * 19) }, "Blue");
-        if (this.shotNumber == 20) {
-            this.onPlayerDrop("Ion");
+        var ionHit = hitPlane(this.ionPlanePos, pos);
+        effect(pos, ionHit, "Ion");
+        if (ionHit == GameEventType.Kill) {
+            this.ionAlive = false;
         }
-        if (this.shotNumber == 0) {
-            this.onGameChange(Math.floor(Math.random() * 3));
+        var blueHit = hitPlane(this.bluePlanePos, pos);
+        effect(pos, blueHit, "Blue");
+        if (blueHit == GameEventType.Kill) {
+            this.blueAlive = false;
         }
-        this.shotNumber -= 1;
+        if (this.ionAlive) {
+            this.onAttack({ x: Math.floor(Math.random() * 19), y: Math.floor(Math.random() * 19) }, "Ion");
+        }
+        if (this.blueAlive) {
+            this.onAttack({ x: Math.floor(Math.random() * 19), y: Math.floor(Math.random() * 19) }, "Blue");
+        }
+        if (!this.blueAlive && !this.ionAlive) {
+            this.onGameChange(GameStatusType.OverSuccess);
+        }
     };
     return GameEventsMock;
 }());
+function hitPlane(planePos, hitPos) {
+    return GameEventType.Miss;
+}
 //# sourceMappingURL=interfacesMock.js.map

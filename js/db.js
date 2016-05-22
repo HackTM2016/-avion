@@ -5,7 +5,7 @@
 var GlobalFB = (function () {
     function GlobalFB() {
     }
-    GlobalFB.dataRef = new Firebase('https://incandescent-fire-3223.firebaseio.com/avion/');
+    GlobalFB.dataRef = new Firebase('https://project-4810418174258671406.firebaseio.com/');
     GlobalFB.curPlayer = null;
     GlobalFB.curLobby = null;
     GlobalFB.playerRef = null;
@@ -25,7 +25,7 @@ var PlayerAuthFB = (function () {
             return;
         }
         GlobalFB.curPlayer = new Player();
-        GlobalFB.curPlayer = { name: name, status: PlayerStatus.new };
+        GlobalFB.curPlayer = { name: name, status: PlayerStatus.new, room: null };
         this.callback = callback;
         this.playerRef.child(name).transaction(function (old_snapshot) {
             // If user does not exist, add it
@@ -46,7 +46,7 @@ var PlayerAuthFB = (function () {
         // Create new connection to start all over (goOnline it will recreate all observers)
         GlobalFB.curPlayer = null;
         Firebase.goOffline();
-        GlobalFB.dataRef = new Firebase('https://incandescent-fire-3223.firebaseio.com/avion/');
+        GlobalFB.dataRef = new Firebase('https://project-4810418174258671406.firebaseio.com/');
         this.playerRef = GlobalFB.dataRef.child("Players");
     };
     PlayerAuthFB.prototype.onCommit = function (err, commited, snapshot) {
@@ -175,37 +175,70 @@ var JoinGameFB = (function () {
         });
     };
     JoinGameFB.prototype.join = function (name, joined) {
-        var roomsRef = GlobalFB.dataRef.child('Rooms');
-        var joiningRoomRef = roomsRef.child(name);
-        if (joiningRoomRef) {
-            var roomPlayersRef = joiningRoomRef.child("Players");
-            joiningRoomRef.limitToFirst(1).once("child_added", function (snapshot) {
-                roomPlayersRef.push({ 'Name': GlobalFB.curPlayer.name });
-                joiningRoomRef.update({ 'CurNrPlayer': (snapshot.val().CurNrPlayer) });
-                GlobalFB.playerRef.limitToFirst(1).once("child_added", function (snapshot) {
-                    GlobalFB.playerRef.update({ 'Status': 'joined' }, function (error) {
-                        if (error) {
-                            joined(false);
-                        }
-                        else {
-                            joined(true);
-                        }
-                    });
-                });
-            });
-        }
+        GlobalFB.playerRef.update({ 'Status': PlayerStatus.inRoom, 'Room': name }, function (error) {
+            if (error) {
+                joined(false);
+            }
+            else {
+                joined(true);
+            }
+        });
     };
     return JoinGameFB;
 }());
 var SetupGameFB = (function () {
     function SetupGameFB() {
+        this.roomPlayers = new Array();
+        this.addPlayerToRoom = function (snapshot) {
+            var player = new Player();
+            player.name = snapshot.val().Name;
+            player.room = snapshot.val().Room;
+            player.status = snapshot.val().Status;
+            this.roomPlayers.push(player);
+            this.checkIfAllReady();
+        };
+        this.removePlayerFromRoom = function (snapshot) {
+            var player = new Player();
+            for (var i = 0; i < this.roomPlayers; i++) {
+                if (this.roomPlayers[i].name == snapshot.key()) {
+                    this.roomPlayers.splice(i, 1);
+                    break;
+                }
+            }
+            this.checkIfAllReady();
+        };
+        this.changePlayerFromRoom = function (snapshot) {
+            var player = new Player();
+            for (var i = 0; i < this.roomPlayers; i++) {
+                if (this.roomPlayers[i].name == snapshot.key()) {
+                    if (this.roomPlayers[i].status = snapshot.val().Status) {
+                        break;
+                    }
+                }
+            }
+            this.onStartGame();
+            this.checkIfAllReady();
+        };
     }
     SetupGameFB.prototype.init = function (onAdd, onRemove, onUpdate) {
         this.onAdd = onAdd;
         this.onRemove = onRemove;
         this.onUpdate = onUpdate;
     };
+    SetupGameFB.prototype.checkIfAllReady = function () {
+        if (this.roomPlayers.length > 0) {
+            for (var i = 0; this.roomPlayers.length > i; i++) {
+                var player = this.roomPlayers[i];
+                if (player.status != PlayerStatus.ready) {
+                    return false;
+                }
+            }
+        }
+        this.onStartGame();
+        return true;
+    };
     SetupGameFB.prototype.ready = function (callback, onStartGame) {
+        this.onStartGame = onStartGame;
         GlobalFB.playerRef.update({ 'Status': PlayerStatus.ready }, function (error) {
             if (error) {
                 callback(false);
@@ -214,6 +247,10 @@ var SetupGameFB = (function () {
                 callback(true);
             }
         });
+        var playersRef = GlobalFB.dataRef.child('Players');
+        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_added", this.addPlayerToRoom);
+        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", this.removePlayerFromRoom);
+        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", this.changePlayerFromRoom);
     };
     return SetupGameFB;
 }());

@@ -61,30 +61,47 @@ class GameEventsMock implements GameEvents
     onPlayerDrop: (playerName:string) => void 
     onGameChange: (status:GameStatusType) => void
     
+    ionPlanePos : vec2 = { x: Math.floor(Math.random() * 14), y: Math.floor(Math.random() * 14) }
+    bluePlanePos : vec2 = { x: Math.floor(Math.random() * 14), y: Math.floor(Math.random() * 14) }
+    
+    ionAlive : boolean = true
+    blueAlive : boolean = true
+    
     init(onAttack: (coord:vec2, playerName : string) => GameEventType, 
          onPlayerDrop: (playerName:string) => void, 
          onGameChange: (status:GameStatusType) => void)
     {
-         this.shotNumber = 40
          this.onAttack = onAttack
          this.onPlayerDrop = onPlayerDrop
          this.onGameChange = onGameChange
     }
     shoot(pos:vec2, effect: (coord:vec2, type: GameEventType, playerName : string) => void)
     {
-        effect(pos, Math.floor(Math.random() * 3), "Ion")
-        effect(pos, Math.floor(Math.random() * 3), "Blue")
-
-        this.onAttack( { x : Math.floor(Math.random() * 19), y : Math.floor(Math.random() * 19) }, "Ion" )
-        this.onAttack( { x : Math.floor(Math.random() * 19), y : Math.floor(Math.random() * 19) }, "Blue" )
+        var ionHit = hitPlane(this.ionPlanePos, pos)
+        effect(pos, ionHit, "Ion")
+        if (ionHit == GameEventType.Kill) {
+            this.ionAlive = false;
+        }
+        var blueHit = hitPlane(this.bluePlanePos, pos)
+        effect(pos, blueHit, "Blue")
+        if (blueHit == GameEventType.Kill) {
+            this.blueAlive = false;
+        }
         
-        if (this.shotNumber == 20) {
-            this.onPlayerDrop("Ion")
+        if (this.ionAlive) {
+            this.onAttack( { x : Math.floor(Math.random() * 19), y : Math.floor(Math.random() * 19) }, "Ion" )
         }
-        if (this.shotNumber == 0) {
-            this.onGameChange(Math.floor(Math.random() * 3))
+        
+        if (this.blueAlive) {
+            this.onAttack( { x : Math.floor(Math.random() * 19), y : Math.floor(Math.random() * 19) }, "Blue" )
         }
-        this.shotNumber -= 1;
+        
+        if (!this.blueAlive && !this.ionAlive) {
+            this.onGameChange(GameStatusType.OverSuccess)
+        }
     }
 }
 
+function hitPlane(planePos, hitPos) : any {
+    return GameEventType.Miss
+}
