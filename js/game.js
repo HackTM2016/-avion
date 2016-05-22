@@ -13,14 +13,14 @@ var GamePlayerState;
     GamePlayerState[GamePlayerState["Alive"] = 1] = "Alive";
     GamePlayerState[GamePlayerState["Dead"] = 2] = "Dead";
 })(GamePlayerState || (GamePlayerState = {}));
-var planesSrcs = ['img/avion-up.png', 'img/avion-down.png', 'img/avion-left.png', 'img/avion-right.png'];
-var PlaneOrientation;
-(function (PlaneOrientation) {
-    PlaneOrientation[PlaneOrientation["Up"] = 0] = "Up";
-    PlaneOrientation[PlaneOrientation["Down"] = 1] = "Down";
-    PlaneOrientation[PlaneOrientation["Left"] = 2] = "Left";
-    PlaneOrientation[PlaneOrientation["Right"] = 3] = "Right";
-})(PlaneOrientation || (PlaneOrientation = {}));
+var AirplanesSrcs = ['img/avion-up.png', 'img/avion-down.png', 'img/avion-left.png', 'img/avion-right.png'];
+var AirplaneOrientation;
+(function (AirplaneOrientation) {
+    AirplaneOrientation[AirplaneOrientation["Up"] = 0] = "Up";
+    AirplaneOrientation[AirplaneOrientation["Down"] = 1] = "Down";
+    AirplaneOrientation[AirplaneOrientation["Left"] = 2] = "Left";
+    AirplaneOrientation[AirplaneOrientation["Right"] = 3] = "Right";
+})(AirplaneOrientation || (AirplaneOrientation = {}));
 function InitGame(info) {
     var game = new Game;
     game.info = info;
@@ -40,7 +40,8 @@ function ResizeGame() {
 }
 var Game = (function () {
     function Game() {
-        this.airplanePosition = { x: 0, y: 0, orientation: PlaneOrientation.Up };
+        this.airplanePosition = { x: 0, y: 0 };
+        this.airplaneOrientation = AirplaneOrientation.Up;
         this.gamePlayerState = GamePlayerState.Initial;
         this.gameEvents = new GameEventsMock;
     }
@@ -64,7 +65,7 @@ var Game = (function () {
         game.greenX = new Image();
         game.gamePlayerState = GamePlayerState.Initial;
         game.bgImage.src = 'img/dot.png';
-        game.airplaneImage.src = planesSrcs[0];
+        game.airplaneImage.src = AirplanesSrcs[AirplaneOrientation.Up];
         game.hoverGridImage.src = 'img/dot-hover.png';
         game.redX.src = 'img/red-x.png';
         game.grayX.src = 'img/gray-x.png';
@@ -92,6 +93,7 @@ var Game = (function () {
                 game.airplanePosition = gridClick;
                 // Clear, forgot why I added this
                 game.contextLayer1.clearRect(0, 0, game.canvasLayer1.width, game.canvasLayer1.height);
+                game.airplaneImage.src = AirplanesSrcs[game.airplaneOrientation];
                 game.contextLayer1.drawImage(game.airplaneImage, 0, 0, // image, offsetX, offsetY
                 PLANE_WIDTH, PLANE_HEIGHT, // width, height
                 game.airplanePosition.x * tileSize, game.airplanePosition.y * tileSize, // canvasOffsetX, canvasOffsetY
@@ -106,9 +108,21 @@ var Game = (function () {
                 alert("Game Over");
             }
         }, false);
-        game.canvasLayer1.addEventListener('keypress', function (evt) {
-            var key = evt.key;
-            if (game.gamePlayerState == GamePlayerState.Initial) {
+        document.addEventListener('keyup', function (evt) {
+            var key = evt.keyCode;
+            if (game.gamePlayerState == GamePlayerState.Initial && key == 82) {
+                if (game.airplaneOrientation == AirplaneOrientation.Up) {
+                    game.airplaneOrientation = AirplaneOrientation.Down;
+                }
+                else if (game.airplaneOrientation == AirplaneOrientation.Down) {
+                    game.airplaneOrientation = AirplaneOrientation.Left;
+                }
+                else if (game.airplaneOrientation == AirplaneOrientation.Left) {
+                    game.airplaneOrientation = AirplaneOrientation.Right;
+                }
+                else if (game.airplaneOrientation == AirplaneOrientation.Right) {
+                    game.airplaneOrientation = AirplaneOrientation.Up;
+                }
             }
         }, false);
     };

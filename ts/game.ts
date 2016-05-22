@@ -18,9 +18,9 @@ enum GamePlayerState {
     Dead
 }
 
-var planesSrcs = ['img/avion-up.png', 'img/avion-down.png', 'img/avion-left.png', 'img/avion-right.png']
+var AirplanesSrcs = ['img/avion-up.png', 'img/avion-down.png', 'img/avion-left.png', 'img/avion-right.png']
 
-enum PlaneOrientation {
+enum AirplaneOrientation {
     Up,
     Down,
     Left,
@@ -65,7 +65,8 @@ class Game {
     grayX: HTMLImageElement
     greenX: HTMLImageElement
 
-    airplanePosition: any = { x: 0, y: 0 , orientation: PlaneOrientation.Up};
+    airplanePosition: any = { x: 0, y: 0 };
+    airplaneOrientation: AirplaneOrientation = AirplaneOrientation.Up
     gamePlayerState: GamePlayerState = GamePlayerState.Initial;
 
     info : Lobby
@@ -101,7 +102,7 @@ class Game {
         game.gamePlayerState = GamePlayerState.Initial;
         
         game.bgImage.src = 'img/dot.png';
-        game.airplaneImage.src = planesSrcs[0];
+        game.airplaneImage.src = AirplanesSrcs[AirplaneOrientation.Up];
         game.hoverGridImage.src = 'img/dot-hover.png';
 
         game.redX.src = 'img/red-x.png';
@@ -142,6 +143,8 @@ class Game {
                 // Clear, forgot why I added this
                 game.contextLayer1.clearRect(0, 0, game.canvasLayer1.width, game.canvasLayer1.height);
 
+                game.airplaneImage.src = AirplanesSrcs[game.airplaneOrientation]
+                
                 game.contextLayer1.drawImage(game.airplaneImage, 0, 0, // image, offsetX, offsetY
                     PLANE_WIDTH, PLANE_HEIGHT, // width, height
                     game.airplanePosition.x * tileSize, game.airplanePosition.y * tileSize,   // canvasOffsetX, canvasOffsetY
@@ -158,10 +161,18 @@ class Game {
             
         }, false);
         
-        game.canvasLayer1.addEventListener('keypress', function (evt) {
-            var key = evt.key;
-            
-            if (game.gamePlayerState == GamePlayerState.Initial) {
+        document.addEventListener('keyup', function (evt) {
+            var key = evt.keyCode;
+            if (game.gamePlayerState == GamePlayerState.Initial && key == 82) {
+                if(game.airplaneOrientation == AirplaneOrientation.Up){
+                    game.airplaneOrientation = AirplaneOrientation.Down
+                }else if(game.airplaneOrientation == AirplaneOrientation.Down){
+                    game.airplaneOrientation = AirplaneOrientation.Left
+                }else if(game.airplaneOrientation == AirplaneOrientation.Left){
+                    game.airplaneOrientation = AirplaneOrientation.Right
+                }else if(game.airplaneOrientation == AirplaneOrientation.Right){
+                    game.airplaneOrientation = AirplaneOrientation.Up
+                }
             }
         }, false)
 
