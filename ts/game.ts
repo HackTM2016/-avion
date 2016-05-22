@@ -1,7 +1,7 @@
 /// <reference path="interfaces.ts"/>
 
 const PLANE_WIDTH: number = 160;
-const PLANE_HEIGHT: number = 127;
+const PLANE_HEIGHT: number = 160;
 
 // Used for scaling and positioning
 var originalTileSize = 32;
