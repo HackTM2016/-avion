@@ -57,6 +57,7 @@ class Game {
     canvasLayer1: HTMLCanvasElement;
     contextLayer0: CanvasRenderingContext2D;
     contextLayer1: CanvasRenderingContext2D;
+    gameStatusElem: HTMLElement;
 
     bgImage: HTMLImageElement
     hoverGridImage: HTMLImageElement
@@ -92,6 +93,7 @@ class Game {
         game.canvasLayer1 = <HTMLCanvasElement>document.getElementById('canvasLayer1');
         game.contextLayer0 = game.canvasLayer0.getContext('2d');
         game.contextLayer1 = game.canvasLayer1.getContext('2d');
+        game.gameStatusElem = document.getElementById('status');
 
         game.bgImage = new Image();
         game.airplaneImage = new Image();
@@ -141,6 +143,7 @@ class Game {
             if (game.gamePlayerState == GamePlayerState.Initial) {
                 // First click, set plane position
                 game.gamePlayerState = GamePlayerState.Alive;
+                game.gameStatusElem.innerText = "Play!";
 
                 // TO DO: Check if position is legal
                 game.airplanePosition = gridClick;
