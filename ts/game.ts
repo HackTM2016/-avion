@@ -134,9 +134,30 @@ class Game {
             game.drawTileImage(game.contextLayer0, game.hoverGridImage, gridPos)
         }, false)
 
+        function validateDeployPosition(positionOnGrid: vec2):boolean {
+            if (game.airplaneOrientation == AirplaneOrientation.Up && ((positionOnGrid.x > boardSize.x - 5) || (positionOnGrid.y > boardSize.y - 4))){
+                return false
+            } else 
+            if (game.airplaneOrientation == AirplaneOrientation.Down && ((positionOnGrid.x > boardSize.x - 5) || (positionOnGrid.y > boardSize.y - 4))){
+                return false
+            } else 
+            if (game.airplaneOrientation == AirplaneOrientation.Left && ((positionOnGrid.x > boardSize.x - 4) || (positionOnGrid.y > boardSize.y - 5))){
+                return false
+            }else 
+            if (game.airplaneOrientation == AirplaneOrientation.Right && ((positionOnGrid.x > boardSize.x - 4) || (positionOnGrid.y > boardSize.y - 5))){
+                return false
+            }
+            return true
+            
+        }
         game.canvasLayer1.addEventListener('mouseup', function (evt) {
 
             var gridClick = game.GetGridPos({ x: evt.clientX, y: evt.clientY });
+            
+            if(!validateDeployPosition(gridClick) && game.gamePlayerState == GamePlayerState.Initial){
+                alert("Wrong position for the airplane!")
+                return
+            }
 
             if (game.gamePlayerState == GamePlayerState.Initial) {
                 // First click, set plane position

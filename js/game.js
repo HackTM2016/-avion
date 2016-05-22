@@ -1,6 +1,6 @@
 /// <reference path="interfaces.ts"/>
 var PLANE_WIDTH = 160;
-var PLANE_HEIGHT = 127;
+var PLANE_HEIGHT = 160;
 // Used for scaling and positioning
 var originalTileSize = 32;
 var theoreticalTileSize = 16;
@@ -88,8 +88,27 @@ var Game = (function () {
             // Draw yellow (highlited) grid dot
             game.drawTileImage(game.contextLayer0, game.hoverGridImage, gridPos);
         }, false);
+        function validateDeployPosition(positionOnGrid) {
+            if (game.airplaneOrientation == AirplaneOrientation.Up && ((positionOnGrid.x > boardSize.x - 5) || (positionOnGrid.y > boardSize.y - 4))) {
+                return false;
+            }
+            else if (game.airplaneOrientation == AirplaneOrientation.Down && ((positionOnGrid.x > boardSize.x - 5) || (positionOnGrid.y > boardSize.y - 4))) {
+                return false;
+            }
+            else if (game.airplaneOrientation == AirplaneOrientation.Left && ((positionOnGrid.x > boardSize.x - 4) || (positionOnGrid.y > boardSize.y - 5))) {
+                return false;
+            }
+            else if (game.airplaneOrientation == AirplaneOrientation.Right && ((positionOnGrid.x > boardSize.x - 4) || (positionOnGrid.y > boardSize.y - 5))) {
+                return false;
+            }
+            return true;
+        }
         game.canvasLayer1.addEventListener('mouseup', function (evt) {
             var gridClick = game.GetGridPos({ x: evt.clientX, y: evt.clientY });
+            if (!validateDeployPosition(gridClick) && game.gamePlayerState == GamePlayerState.Initial) {
+                alert("Wrong position for the airplane!");
+                return;
+            }
             if (game.gamePlayerState == GamePlayerState.Initial) {
                 // First click, set plane position
                 game.gamePlayerState = GamePlayerState.Alive;
