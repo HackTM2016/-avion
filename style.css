@@ -50,6 +50,7 @@
 input[type=text] {
     width: 40%;
     height: 30%;
+	min-width: 330px;
     background: transparent;
     padding: 12px 20px;
     margin: 8px 0;
