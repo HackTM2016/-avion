@@ -5,7 +5,7 @@
 var GlobalFB = (function () {
     function GlobalFB() {
     }
-    GlobalFB.dataRef = new Firebase('https://incandescent-fire-3223.firebaseio.com/avion/');
+    GlobalFB.dataRef = new Firebase('https://project-4810418174258671406.firebaseio.com/');
     GlobalFB.curPlayer = null;
     GlobalFB.curLobby = null;
     GlobalFB.lobbyRef = null;
@@ -177,6 +177,7 @@ var JoinGameFB = (function () {
                 joined(false);
             }
             else {
+                GlobalFB.curPlayer.room = name;
                 joined(true);
             }
         });
@@ -235,6 +236,7 @@ var SetupGameFB = (function () {
         return true;
     };
     SetupGameFB.prototype.ready = function (callback, onStartGame) {
+        var _this = this;
         this.onStartGame = onStartGame;
         GlobalFB.playerRef.update({ 'Status': PlayerStatus.ready }, function (error) {
             if (error) {
@@ -245,9 +247,9 @@ var SetupGameFB = (function () {
             }
         });
         var playersRef = GlobalFB.dataRef.child('Players');
-        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_added", this.addPlayerToRoom);
-        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", this.removePlayerFromRoom);
-        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", this.changePlayerFromRoom);
+        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_added", function (snapshot) { _this.addPlayerToRoom(snapshot); });
+        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", function (snapshot) { _this.removePlayerFromRoom(snapshot); });
+        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", function (snapshot) { _this.changePlayerFromRoom(snapshot); });
     };
     return SetupGameFB;
 }());
@@ -256,27 +258,41 @@ var GameEventsFB = (function () {
         this.onAttack = null;
         this.onPlayerDrop = null;
         this.onGameChange = null;
+        this.onEvent = null;
     }
     GameEventsFB.prototype.init = function (onAttack, onPlayerDrop, onGameChange) {
+        var _this = this;
         this.onAttack = onAttack;
         this.onPlayerDrop = onPlayerDrop;
         this.onGameChange = onGameChange;
-        //GlobalFB.dataRef.child("Shoot").this.
-        GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", this.playerDataChange.bind(this));
-        GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", this.playerDrop.bind(this));
+        GlobalFB.dataRef.child("Shoot").on("child_changed", function (snapshot) { return (_this.onShot(snapshot)); });
+        GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", function (snapshot) { return (_this.playerDataChange(snapshot)); });
+        GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", function (snapshot) { return (_this.playerDrop(snapshot)); });
     };
-    GameEventsFB.prototype.shoot = function (pos) {
+    GameEventsFB.prototype.shoot = function (pos, effect) {
+        this.onEvent = effect;
+        GlobalFB.dataRef.child("Shot").set({ who: GlobalFB.curPlayer.name, room: GlobalFB.curLobby.name, x: pos.x, y: pos.y });
+    };
+    GameEventsFB.prototype.onShot = function (snapshot) {
+        var shotData = snapshot.val();
+        if (shotData.room == GlobalFB.curLobby.name &&
+            shotData.player != GlobalFB.curPlayer.name) {
+            var resp = this.onAttack({ x: shotData.x, y: shotData.y }, shotData.who);
+            GlobalFB.playerRef.update({ Hit: { x: shotData.x, y: shotData.y, who: shotData.player, type: resp } });
+        }
     };
     GameEventsFB.prototype.playerDataChange = function (snapshot) {
         var playerName = snapshot.key();
         var playerData = snapshot.val();
         if (playerData.room == GlobalFB.curLobby.name) {
+            this.onEvent({ x: playerData.Hit.x, y: playerData.Hit.y }, playerData.Hit.type, playerName);
         }
     };
     GameEventsFB.prototype.playerDrop = function (snapshot) {
         var playerName = snapshot.key();
         var playerData = snapshot.val();
         if (playerData.room == GlobalFB.curLobby.name) {
+            this.onPlayerDrop(playerName);
         }
     };
     return GameEventsFB;
@@ -305,6 +321,9 @@ var TestFB = (function () {
         }
     };
     TestFB.CreateTest = function () {
+        for (var i = 0; i < 10000; i++) {
+            i = i + 1;
+        }
         var plLobby = new CreateGameFB();
         var lb1 = new Lobby();
         lb1.name = "testLobby5"; //leave the rest default
@@ -327,11 +346,98 @@ var TestFB = (function () {
          plAuth.login("Mumu", TestFB.onLoginCommit)
          GlobalFB.curPlayer = pl1*/
     };
+    TestFB.PlayTest = function () {
+        for (var i = 0; i < 10000; i++) {
+            i = i + 1;
+        }
+    };
     TestFB.prototype.run = function () {
         TestFB.LoginTest();
+        setTimeout(TestFB.CreateTest, 5000);
+        setTimeout(TestFB.PlayTest, 5000);
     };
     return TestFB;
 }());
-// var autoTest = new TestFB
-// autoTest.run()
+var SeptiTestFB = (function () {
+    function SeptiTestFB() {
+    }
+    SeptiTestFB.onLoginCommit = function (ok) {
+        if (ok) {
+            console.log("Login success!");
+        }
+        else {
+            console.log("Login failed!");
+        }
+        TestFB.CreateTest();
+    };
+    SeptiTestFB.onCreateCommit = function (ok) {
+        if (ok) {
+            console.log("Lobby create success!");
+        }
+        else {
+            console.log("Lobby create failed!");
+        }
+    };
+    SeptiTestFB.CreateTest = function () {
+        var plLobby = new CreateGameFB();
+        var lb1 = new Lobby();
+        lb1.name = "testLobby5"; //leave the rest default
+        console.log("Attempt create testLobby5 - expect ok");
+        plLobby.create(lb1, TestFB.onCreateCommit);
+        /*lb1.maxNoPlayers = 6; //leave the rest default
+        console.log("Attempt create testLobby5 - expect fail")
+        plLobby.create(lb1, TestFB.onCreateCommit)*/
+    };
+    SeptiTestFB.prototype.LoginTest = function () {
+        var plAuth = new PlayerAuthFB();
+        console.log("Attempt login with Lemmer - expect ok");
+        plAuth.login("Lemmer", function (success) {
+            if (success) {
+                console.log("Septi: Login Lemmer");
+                var joinGame = new JoinGameFB();
+                joinGame.init(10, function (lobby) {
+                    console.log("Septi added lobby name: " + lobby.name);
+                }, function (lobbyName) {
+                    console.log("Septi removed lobby name: " + lobbyName);
+                });
+                joinGame.join("Battle of Britain", function (success) {
+                    if (success) {
+                        console.log("Septi: Join successfull");
+                        console.log("Septi: setupGame");
+                        var setupGame = new SetupGameFB();
+                        setupGame.init(function (player) {
+                            console.log("New Player: " + player.name);
+                        }, function (player) {
+                            console.log("Remove Player: " + player);
+                        }, function (player) {
+                            console.log("Update Player: " + player.name);
+                        });
+                        setupGame.ready(function (succes) {
+                            if (success) {
+                                console.log("Ready successfull");
+                            }
+                            else {
+                                console.log("Ready not successfull");
+                            }
+                        }, function () {
+                            console.log("Start Game");
+                        });
+                    }
+                    else {
+                        console.log("Join not successfull");
+                    }
+                });
+            }
+            else {
+                console.log("Septi: Login Failed");
+            }
+        });
+    };
+    SeptiTestFB.prototype.run = function () {
+        this.LoginTest();
+    };
+    return SeptiTestFB;
+}());
+//var autoTest = new TestFB()
+//autoTest.run()
 //# sourceMappingURL=db.js.map
