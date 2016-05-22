@@ -5,7 +5,7 @@
 // Septi DB: https://project-4810418174258671406.firebaseio.com/
 
 class GlobalFB {
-    static dataRef: Firebase = new Firebase('https://incandescent-fire-3223.firebaseio.com/avion/')
+    static dataRef: Firebase = new Firebase('https://project-4810418174258671406.firebaseio.com/')
     static curPlayer: Player = null;
     static curLobby: Lobby = null;
     static lobbyRef: Firebase = null;
@@ -190,6 +190,7 @@ class JoinGameFB implements JoinGame
             if (error) {
                 joined(false);
             } else {
+                GlobalFB.curPlayer.room = name;
                 joined(true);
             }
         });                
@@ -276,9 +277,10 @@ class SetupGameFB implements SetupGame {
             }
         });
         var playersRef = GlobalFB.dataRef.child('Players');
-        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_added", this.addPlayerToRoom);      
-        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", this.removePlayerFromRoom);
-        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", this.changePlayerFromRoom);
+
+        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_added", (snapshot)=>{this.addPlayerToRoom(snapshot)});      
+        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", (snapshot)=>{this.removePlayerFromRoom(snapshot)});
+        playersRef.orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", (snapshot)=>{this.changePlayerFromRoom(snapshot)});
     }
 }
 
@@ -293,7 +295,6 @@ class GameEventsFB implements GameEvents {
         this.onAttack = onAttack;
         this.onPlayerDrop = onPlayerDrop;
         this.onGameChange = onGameChange;
-        //GlobalFB.dataRef.child("Shoot").this.
         GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", this.playerDataChange.bind(this));
         GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", this.playerDrop.bind(this));
     }
@@ -374,6 +375,89 @@ class TestFB {
     }
 }
 
-// var autoTest = new TestFB
-// autoTest.run()
+class SeptiTestFB {
+    static onLoginCommit(ok:boolean) : void {
+        if (ok) {console.log("Login success!")}
+        else {console.log("Login failed!")}
+        TestFB.CreateTest();
+    }
+    
+    static onCreateCommit(ok:boolean) : void {
+        if (ok) {console.log("Lobby create success!")}
+        else {console.log("Lobby create failed!")}
+    }
+    
+    static CreateTest() : void {
+        var plLobby = new CreateGameFB()
+
+        var lb1 = new Lobby();
+        lb1.name = "testLobby5" //leave the rest default
+        console.log("Attempt create testLobby5 - expect ok")
+        plLobby.create(lb1, TestFB.onCreateCommit)
+
+        /*lb1.maxNoPlayers = 6; //leave the rest default
+        console.log("Attempt create testLobby5 - expect fail")
+        plLobby.create(lb1, TestFB.onCreateCommit)*/
+    }
+
+    public LoginTest() {
+        var plAuth = new PlayerAuthFB()
+
+        console.log("Attempt login with Lemmer - expect ok")
+        plAuth.login("Lemmer", function (success) {
+            if (success)  {
+                console.log("Septi: Login Lemmer");
+                var joinGame = new JoinGameFB();
+                joinGame.init(
+                    10,
+                    function(lobby : Lobby) {
+                        console.log("Septi added lobby name: " + lobby.name);
+                    },
+                    function(lobbyName : string) {
+                        console.log("Septi removed lobby name: " + lobbyName);
+                    }                               
+                );
+                joinGame.join("Battle of Britain", function (success) {
+                    if (success) {
+                        console.log("Septi: Join successfull");
+                        console.log("Septi: setupGame");
+                        var setupGame = new SetupGameFB();
+                        setupGame.init(
+                            function(player : Player) {
+                                console.log("New Player: " + player.name);
+                            },
+                            function(player : String) {
+                                console.log("Remove Player: " + player);
+                            },
+                            function(player : Player) {
+                                console.log("Update Player: " + player.name);
+                            }                        
+                        );
+                        setupGame.ready(
+                            function(succes: boolean) {
+                                if (success) {
+                                    console.log("Ready successfull");
+                                } else {
+                                    console.log("Ready not successfull");
+                                }
+                            },
+                            function() {
+                                console.log("Start Game");
+                            });
+                    } else {
+                        console.log("Join not successfull");
+                    }
+                });
+            } else {
+                console.log("Septi: Login Failed");
+            }
+        });
+    }
+    
+    public run() :void {
+        this.LoginTest();
+    }
+}
+var autoTest = new TestFB()
+autoTest.run()
 

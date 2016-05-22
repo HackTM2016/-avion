@@ -25,6 +25,31 @@
 
 }
 
+.toast	{
+    font-family: "FiraSans";
+    min-width: 220px;
+	max-width: 400px;
+    background-color: #ffffff;
+    border: none;
+    color: #29B6F6;
+    padding: 10px 22px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 17px;
+    margin: 20px 20px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -o-border-radius: 100px;
+    box-shadow: -4px 4px 0px rgba(0, 0, 0, 0.1);
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+    outline: none;
+
+}
+
 .button:hover {
     background: #29B6F6;
     color: #ffffff;
