@@ -5,7 +5,7 @@ var PLANE_HEIGHT = 160;
 var originalTileSize = 32;
 var theoreticalTileSize = 16;
 var tileSize = theoreticalTileSize;
-var boardSize = { x: 19, y: 19 };
+var boardSize = { x: 10, y: 10 };
 var globalGame = null;
 var GamePlayerState;
 (function (GamePlayerState) {
@@ -44,6 +44,7 @@ var Game = (function () {
         this.airplaneOrientation = AirplaneOrientation.Up;
         this.gamePlayerState = GamePlayerState.Initial;
         this.gameEvents = new GameEventsMock;
+        this.status = GameStatusType.Playing;
     }
     Game.prototype.Init = function () {
         var game = this;
@@ -126,8 +127,6 @@ var Game = (function () {
                 game.gameEvents.shoot(gridClick, function (c, t, p) { game.shotResponse(c, t, p); });
             }
             else {
-                // Player is dead, do nothing?
-                alert("Game Over");
             }
         }, false);
         document.addEventListener('keyup', function (evt) {
@@ -185,10 +184,13 @@ var Game = (function () {
         }
     };
     Game.prototype.onAttack = function (coord, playerName) {
-        var type = JudgeHit(coord, this.airplanePosition);
+        var type = JudgeHit(coord, this.airplanePosition, this.airplaneOrientation);
         switch (type) {
-            case GameEventType.Hit:
             case GameEventType.Kill:
+                this.gamePlayerState = GamePlayerState.Dead;
+                this.status = GameStatusType.OverLost;
+                this.endGame();
+            case GameEventType.Hit:
                 this.drawTileImage(this.contextLayer1, this.enemyHitX, coord);
                 break;
             case GameEventType.Miss:
@@ -202,6 +204,18 @@ var Game = (function () {
     };
     Game.prototype.onGameChange = function (status) {
         this.gamePlayerState = GamePlayerState.Dead;
+        this.endGame();
+    };
+    Game.prototype.endGame = function () {
+        if (this.status == GameStatusType.OverSuccess || this.status == GameStatusType.Playing) {
+            alert("You win!");
+        }
+        else if (this.status == GameStatusType.OverLost) {
+            alert("Game Over!");
+        }
+        else if (this.status == GameStatusType.Disconnected) {
+            alert("Disconnected!");
+        }
     };
     return Game;
 }());

@@ -261,8 +261,8 @@ var GameEventsFB = (function () {
         this.onAttack = onAttack;
         this.onPlayerDrop = onPlayerDrop;
         this.onGameChange = onGameChange;
-        GlobalFB.dataRef.child("Shoot").this.
-            GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", this.playerDataChange.bind(this));
+        //GlobalFB.dataRef.child("Shoot").this.
+        GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_changed", this.playerDataChange.bind(this));
         GlobalFB.dataRef.child("Players").orderByChild("Room").equalTo(GlobalFB.curPlayer.room).on("child_removed", this.playerDrop.bind(this));
     };
     GameEventsFB.prototype.shoot = function (pos) {
@@ -332,6 +332,6 @@ var TestFB = (function () {
     };
     return TestFB;
 }());
-var autoTest = new TestFB();
-autoTest.run();
+// var autoTest = new TestFB
+// autoTest.run()
 //# sourceMappingURL=db.js.map

@@ -41,25 +41,38 @@ var SetupGameMock = (function () {
 var GameEventsMock = (function () {
     function GameEventsMock() {
         this.shotNumber = 100;
+        this.ionPlanePos = { x: Math.floor(Math.random() * (boardSize.x - 5)), y: Math.floor(Math.random() * (boardSize.y - 4)) };
+        this.bluePlanePos = { x: Math.floor(Math.random() * (boardSize.x - 5)), y: Math.floor(Math.random() * (boardSize.y - 4)) };
+        this.ionOrientation = Math.floor(Math.random() * 4);
+        this.blueOrientation = Math.floor(Math.random() * 4);
+        this.ionAlive = true;
+        this.blueAlive = true;
     }
     GameEventsMock.prototype.init = function (onAttack, onPlayerDrop, onGameChange) {
-        this.shotNumber = 40;
         this.onAttack = onAttack;
         this.onPlayerDrop = onPlayerDrop;
         this.onGameChange = onGameChange;
     };
     GameEventsMock.prototype.shoot = function (pos, effect) {
-        effect(pos, Math.floor(Math.random() * 3), "Ion");
-        effect(pos, Math.floor(Math.random() * 3), "Blue");
-        this.onAttack({ x: Math.floor(Math.random() * 19), y: Math.floor(Math.random() * 19) }, "Ion");
-        this.onAttack({ x: Math.floor(Math.random() * 19), y: Math.floor(Math.random() * 19) }, "Blue");
-        if (this.shotNumber == 20) {
-            this.onPlayerDrop("Ion");
+        var ionHit = JudgeHit(pos, this.ionPlanePos, this.ionOrientation);
+        effect(pos, ionHit, "Ion");
+        if (ionHit == GameEventType.Kill) {
+            this.ionAlive = false;
         }
-        if (this.shotNumber == 0) {
-            this.onGameChange(Math.floor(Math.random() * 3));
+        var blueHit = JudgeHit(pos, this.bluePlanePos, this.blueOrientation);
+        effect(pos, blueHit, "Blue");
+        if (blueHit == GameEventType.Kill) {
+            this.blueAlive = false;
         }
-        this.shotNumber -= 1;
+        if (this.ionAlive) {
+            this.onAttack({ x: Math.floor(Math.random() * boardSize.x), y: Math.floor(Math.random() * boardSize.y) }, "Ion");
+        }
+        if (this.blueAlive) {
+            this.onAttack({ x: Math.floor(Math.random() * boardSize.x), y: Math.floor(Math.random() * boardSize.y) }, "Blue");
+        }
+        if (!this.blueAlive && !this.ionAlive) {
+            this.onGameChange(GameStatusType.OverSuccess);
+        }
     };
     return GameEventsMock;
 }());

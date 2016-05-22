@@ -8,7 +8,7 @@ var originalTileSize = 32;
 var theoreticalTileSize = 16;
 var tileSize = theoreticalTileSize;
 
-var boardSize = { x: 19, y: 19 }
+var boardSize = { x: 10, y: 10 }
 
 var globalGame = null
 
@@ -57,6 +57,7 @@ class Game {
     canvasLayer1: HTMLCanvasElement;
     contextLayer0: CanvasRenderingContext2D;
     contextLayer1: CanvasRenderingContext2D;
+    gameStatusElem: HTMLElement;
 
     bgImage: HTMLImageElement
     hoverGridImage: HTMLImageElement
@@ -92,6 +93,7 @@ class Game {
         game.canvasLayer1 = <HTMLCanvasElement>document.getElementById('canvasLayer1');
         game.contextLayer0 = game.canvasLayer0.getContext('2d');
         game.contextLayer1 = game.canvasLayer1.getContext('2d');
+        game.gameStatusElem = document.getElementById('status');
 
         game.bgImage = new Image();
         game.airplaneImage = new Image();
@@ -162,6 +164,7 @@ class Game {
             if (game.gamePlayerState == GamePlayerState.Initial) {
                 // First click, set plane position
                 game.gamePlayerState = GamePlayerState.Alive;
+                game.gameStatusElem.innerText = "Play!";
 
                 // TO DO: Check if position is legal
                 game.airplanePosition = gridClick;
@@ -182,7 +185,6 @@ class Game {
             }
             else {
                 // Player is dead, do nothing?
-                alert("Game Over");
             }
 
         }, false);
@@ -252,11 +254,14 @@ class Game {
         }
     }
     onAttack(coord: vec2, playerName: string): GameEventType {
-        var type: GameEventType = JudgeHit(coord, this.airplanePosition);
+        var type: GameEventType = JudgeHit(coord, this.airplanePosition, this.airplaneOrientation);
 
         switch (type) {
-            case GameEventType.Hit:
             case GameEventType.Kill:
+                this.gamePlayerState = GamePlayerState.Dead
+                this.status = GameStatusType.OverLost
+                this.endGame()
+            case GameEventType.Hit:
                 this.drawTileImage(this.contextLayer1, this.enemyHitX, coord);
                 break;
             case GameEventType.Miss:
@@ -270,7 +275,21 @@ class Game {
     onPlayerDrop(playerName: string): void {
 
     }
+    status : GameStatusType = GameStatusType.Playing
     onGameChange(status: GameStatusType): void {
         this.gamePlayerState = GamePlayerState.Dead
+        this.endGame()
+    }
+    
+    endGame() : void {
+        if(this.status == GameStatusType.OverSuccess || this.status == GameStatusType.Playing) {
+            alert("You win!");
+        }
+        else if(this.status == GameStatusType.OverLost) {
+            alert("Game Over!");
+        }
+        else if(this.status == GameStatusType.Disconnected) {
+            alert("Disconnected!");
+        }
     }
 }
