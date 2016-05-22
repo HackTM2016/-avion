@@ -27,15 +27,16 @@
 
 .toast	{
     font-family: "FiraSans";
-    width: 320px;
-    background-color: #29B6F6;
+    min-width: 220px;
+	max-width: 400px;
+    background-color: #ffffff;
     border: none;
-    color: #ffffff;
-    padding: 15px 32px;
+    color: #29B6F6;
+    padding: 10px 22px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 27px;
+    font-size: 17px;
     margin: 20px 20px;
     -webkit-border-radius: 100px;
     -moz-border-radius: 100px;
@@ -45,8 +46,6 @@
     -moz-transition: all 0.5s;
     -o-transition: all 0.5s;
     transition: all 0.5s;
-    cursor: pointer;
-    cursor: hand;
     outline: none;
 
 }
