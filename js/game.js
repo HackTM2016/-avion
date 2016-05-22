@@ -40,8 +40,7 @@ var Game = (function () {
         var game = this;
         globalGame = this;
         game.gameEvents.init(function (c, p) { return game.onAttack(c, p); }, function (p) { game.onPlayerDrop(p); }, function (s) { game.onGameChange(s); });
-        var div = document.getElementById("canvasesForm");
-        div.style.display = "block";
+        SetVisibleDiv("canvasesForm");
         var body = document.getElementById("body");
         body.bgColor = "#29B6F6";
         //

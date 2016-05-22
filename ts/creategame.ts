@@ -26,7 +26,8 @@ class GameCreationController
         var planesPerPlayer = (<HTMLInputElement>document.getElementsByName("planesCount").item(0)).value
         var maxPlayerCount = (<HTMLInputElement>document.getElementsByName("maxPlayerCount").item(0)).value
         
-        SetVisibleDiv("canvasesForm")
+        SetInvisibleDiv("gameCreationForm")
+        InitGame(info)
     }
     
 }

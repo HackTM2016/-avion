@@ -71,8 +71,7 @@ class Game {
             (p) => { game.onPlayerDrop(p) }, 
             (s) => { game.onGameChange(s) })
         
-        var div = <HTMLElement>document.getElementById("canvasesForm")
-        div.style.display = "block"
+        SetVisibleDiv("canvasesForm");
         var body = <HTMLBodyElement>document.getElementById("body")
         body.bgColor = "#29B6F6"
         
