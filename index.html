@@ -39,6 +39,19 @@
 </head>
 
 <body id="body" bgcolor="#FFA200" onload="Startup.init()">
+
+	<script type="text/javascript">
+<!--
+    function toggle_visibility(id) {
+       var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+    }
+//-->
+</script>
+
     <div class="se-pre-con"></div>
 
     <div style="display:block; padding: 50px;">
@@ -52,14 +65,14 @@
         <button name="joinGame" type="button" class="button">Join Game</button>
     </div> 
     
-    <div id="gameCreationForm" style="display:none">
+    <div id="gameCreationForm">
         <table class="gameCreation" style="width:50%" align="center">
         <tr><td style="padding-bottom:40px;"><font class="createScreen">Create Game</font></td></tr>
         <tr><td align="center"><input type="text" name="gameName" placeholder="Game Name" class="inputGame"></td></tr>
         <tr><td align="center"><input type="text" name="planesCount" placeholder="Number of Planes/Player" class="inputGame"></td></tr>
         <tr><td align="center"><input type="text" name="maxPlayerCount" placeholder="Maximum Number of Players" class="inputGame"></td></tr>
         <tr><td align="center"><button name="addGame" type="button" class="buttonAdd">Add Game</button></td></tr>
-        <tr><td align="center"><button name="closeWindows" type="button" class="buttonClose">Close</button></td></tr>
+        <tr><td align="center"><button onclick="toggle_visibility('gameCreationForm'); toggle_visibility('startup');" name="closeWindows" type="button" id="closeButton" class="buttonClose">Close</button></td></tr>
         </table>
     </div>
     
@@ -76,7 +89,7 @@
             
             
         </table>
-        <button name="closeWindows" type="button" class="buttonClose">Close</button>
+        <button onclick="toggle_visibility('gameJoinForm'); toggle_visibility('startup');" name="closeWindows" type="button" class="buttonClose">Close</button>
     </div>
     
     <div id="canvasesForm" width="auto" height="auto" style="position: relative; display:none;">

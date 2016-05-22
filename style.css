@@ -49,7 +49,7 @@
 
 input[type=text] {
     width: 40%;
-    height: auto;
+    height: 30%;
     background: transparent;
     padding: 12px 20px;
     margin: 8px 0;
@@ -107,7 +107,7 @@ input:focus {
 
 #startup {
     width: 100%;
-    height: auto;
+    height: 100%;
     text-align: center;
     display: inline;
     margin: 0 auto;
@@ -132,7 +132,7 @@ body {
   display: inline;
   position: absolute;
   width: 0;
-  height: auto;
+  height: 100%;
   left: 50%;
   text-align: center;
 }
@@ -320,4 +320,8 @@ if it's not present, don't show loader */
 .buttonClose:hover {
 	background: #FF2727;
     color: #ffffff;
+}
+
+#gameCreationForm {
+	display:none;
 }
