@@ -51,16 +51,25 @@ var Game = (function () {
         game.bgImage = new Image();
         game.airplaneImage = new Image();
         game.hoverGridImage = new Image();
-        game.redX = new Image();
-        game.grayX = new Image();
-        game.greenX = new Image();
+        game.killX = new Image();
+        game.missX = new Image();
+        game.hitX = new Image();
+        game.enemyMissX = new Image();
+        game.enemyHitX = new Image();
         game.gamePlayerState = GamePlayerState.Initial;
         game.bgImage.src = 'img/dot.png';
         game.airplaneImage.src = 'img/avion.png';
         game.hoverGridImage.src = 'img/dot-hover.png';
-        game.redX.src = 'img/red-x.png';
-        game.grayX.src = 'img/gray-x.png';
-        game.greenX.src = 'img/green-x.png';
+        game.killX.src = 'img/plane-kill.png';
+        game.missX.src = 'img/gray-x.png';
+        game.hitX.src = 'img/plane-hit.png';
+        game.enemyMissX.src = 'img/enemy-hit.png';
+        game.enemyHitX.src = 'img/enemy-damage.png';
+        game.killX.crossOrigin = "Anonymous";
+        game.missX.crossOrigin = "Anonymous";
+        game.hitX.crossOrigin = "Anonymous";
+        game.enemyMissX.crossOrigin = "Anonymous";
+        game.enemyHitX.crossOrigin = "Anonymous";
         // Handlers
         game.bgImage.onload = function () {
             // Draw grid manually (needs to be done manually for scaling)
@@ -75,7 +84,7 @@ var Game = (function () {
             // Draw yellow (highlited) grid dot
             game.drawTileImage(game.contextLayer0, game.hoverGridImage, gridPos);
         }, false);
-        game.canvasLayer1.addEventListener('click', function (evt) {
+        game.canvasLayer1.addEventListener('mouseup', function (evt) {
             var gridClick = game.GetGridPos({ x: evt.clientX, y: evt.clientY });
             if (game.gamePlayerState == GamePlayerState.Initial) {
                 // First click, set plane position
@@ -124,18 +133,28 @@ var Game = (function () {
     };
     Game.prototype.shotResponse = function (coord, type, playerName) {
         if (type == GameEventType.Hit) {
-            this.drawTileImage(this.contextLayer1, this.greenX, coord);
+            this.drawTileImage(this.contextLayer1, this.hitX, coord);
         }
         else if (type == GameEventType.Kill) {
-            this.drawTileImage(this.contextLayer1, this.redX, coord);
+            this.drawTileImage(this.contextLayer1, this.killX, coord);
         }
         else {
-            this.drawTileImage(this.contextLayer1, this.grayX, coord);
+            this.drawTileImage(this.contextLayer1, this.missX, coord);
         }
     };
     Game.prototype.onAttack = function (coord, playerName) {
-        this.drawTileImage(this.contextLayer1, this.grayX, coord);
-        return GameEventType.Miss;
+        var type = JudgeHit(coord, this.airplanePosition);
+        switch (type) {
+            case GameEventType.Hit:
+            case GameEventType.Kill:
+                this.drawTileImage(this.contextLayer1, this.enemyHitX, coord);
+                break;
+            case GameEventType.Miss:
+                this.drawTileImage(this.contextLayer1, this.enemyMissX, coord);
+            default:
+                break;
+        }
+        return type;
     };
     Game.prototype.onPlayerDrop = function (playerName) {
     };
