@@ -1,7 +1,7 @@
 /// <reference path="interfaces.ts"/>
 
 const PLANE_WIDTH: number = 160;
-const PLANE_HEIGHT: number = 127;
+const PLANE_HEIGHT: number = 160;
 
 // Used for scaling and positioning
 var originalTileSize = 32;
@@ -18,7 +18,16 @@ enum GamePlayerState {
     Dead
 }
 
-function InitGame(info: Lobby): void {
+var AirplanesSrcs = ['img/avion-up.png', 'img/avion-down.png', 'img/avion-left.png', 'img/avion-right.png']
+
+enum AirplaneOrientation {
+    Up,
+    Down,
+    Left,
+    Right
+}
+
+function InitGame(info: Lobby) : void {
     var game = new Game
     game.info = info
     game.Init()
@@ -59,6 +68,7 @@ class Game {
     enemyHitX: HTMLImageElement
 
     airplanePosition: any = { x: 0, y: 0 };
+    airplaneOrientation: AirplaneOrientation = AirplaneOrientation.Up
     gamePlayerState: GamePlayerState = GamePlayerState.Initial;
 
     info: Lobby
@@ -96,7 +106,7 @@ class Game {
         game.gamePlayerState = GamePlayerState.Initial;
 
         game.bgImage.src = 'img/dot.png';
-        game.airplaneImage.src = 'img/avion.png';
+        game.airplaneImage.src = AirplanesSrcs[AirplaneOrientation.Up];
         game.hoverGridImage.src = 'img/dot-hover.png';
 
         game.killX.src = 'img/plane-kill.png';
@@ -138,6 +148,8 @@ class Game {
                 // Clear, forgot why I added this
                 game.contextLayer1.clearRect(0, 0, game.canvasLayer1.width, game.canvasLayer1.height);
 
+                
+                
                 game.contextLayer1.drawImage(game.airplaneImage, 0, 0, // image, offsetX, offsetY
                     PLANE_WIDTH, PLANE_HEIGHT, // width, height
                     game.airplanePosition.x * tileSize, game.airplanePosition.y * tileSize,   // canvasOffsetX, canvasOffsetY
@@ -152,6 +164,23 @@ class Game {
             }
 
         }, false);
+        
+        document.addEventListener('keyup', function (evt) {
+            var key = evt.keyCode;
+            if (game.gamePlayerState == GamePlayerState.Initial && key == 82) {
+                if(game.airplaneOrientation == AirplaneOrientation.Up){
+                    game.airplaneOrientation = AirplaneOrientation.Left
+                }else if(game.airplaneOrientation == AirplaneOrientation.Left){
+                    game.airplaneOrientation = AirplaneOrientation.Down
+                }else if(game.airplaneOrientation == AirplaneOrientation.Down){
+                    game.airplaneOrientation = AirplaneOrientation.Right
+                }else if(game.airplaneOrientation == AirplaneOrientation.Right){
+                    game.airplaneOrientation = AirplaneOrientation.Up
+                }
+            }
+            game.airplaneImage = new Image()
+            game.airplaneImage.src = AirplanesSrcs[game.airplaneOrientation]
+        }, false)
 
     }
 
@@ -201,7 +230,7 @@ class Game {
         }
     }
     onAttack(coord: vec2, playerName: string): GameEventType {
-        var type: GameEventType = JudgeHit(coord, this.airplanePosition);
+        var type: GameEventType = JudgeHit(coord, this.airplanePosition, this.airplaneOrientation);
 
         switch (type) {
             case GameEventType.Kill:

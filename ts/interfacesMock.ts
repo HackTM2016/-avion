@@ -64,6 +64,9 @@ class GameEventsMock implements GameEvents
     ionPlanePos : vec2 = { x: Math.floor(Math.random() * (boardSize.x - 5)), y: Math.floor(Math.random() * (boardSize.y - 4)) }
     bluePlanePos : vec2 = { x: Math.floor(Math.random() * (boardSize.x - 5)), y: Math.floor(Math.random() * (boardSize.y - 4)) }
     
+    ionOrientation : AirplaneOrientation = Math.floor(Math.random() * 4);
+    blueOrientation : AirplaneOrientation = Math.floor(Math.random() * 4);
+    
     ionAlive : boolean = true
     blueAlive : boolean = true
     
@@ -77,12 +80,12 @@ class GameEventsMock implements GameEvents
     }
     shoot(pos:vec2, effect: (coord:vec2, type: GameEventType, playerName : string) => void)
     {
-        var ionHit = JudgeHit(pos, this.ionPlanePos)
+        var ionHit = JudgeHit(pos, this.ionPlanePos, this.ionOrientation)
         effect(pos, ionHit, "Ion")
         if (ionHit == GameEventType.Kill) {
             this.ionAlive = false;
         }
-        var blueHit = JudgeHit(pos, this.bluePlanePos)
+        var blueHit = JudgeHit(pos, this.bluePlanePos, this.blueOrientation)
         effect(pos, blueHit, "Blue")
         if (blueHit == GameEventType.Kill) {
             this.blueAlive = false;

@@ -43,6 +43,8 @@ var GameEventsMock = (function () {
         this.shotNumber = 100;
         this.ionPlanePos = { x: Math.floor(Math.random() * (boardSize.x - 5)), y: Math.floor(Math.random() * (boardSize.y - 4)) };
         this.bluePlanePos = { x: Math.floor(Math.random() * (boardSize.x - 5)), y: Math.floor(Math.random() * (boardSize.y - 4)) };
+        this.ionOrientation = Math.floor(Math.random() * 4);
+        this.blueOrientation = Math.floor(Math.random() * 4);
         this.ionAlive = true;
         this.blueAlive = true;
     }
@@ -52,12 +54,12 @@ var GameEventsMock = (function () {
         this.onGameChange = onGameChange;
     };
     GameEventsMock.prototype.shoot = function (pos, effect) {
-        var ionHit = JudgeHit(pos, this.ionPlanePos);
+        var ionHit = JudgeHit(pos, this.ionPlanePos, this.ionOrientation);
         effect(pos, ionHit, "Ion");
         if (ionHit == GameEventType.Kill) {
             this.ionAlive = false;
         }
-        var blueHit = JudgeHit(pos, this.bluePlanePos);
+        var blueHit = JudgeHit(pos, this.bluePlanePos, this.blueOrientation);
         effect(pos, blueHit, "Blue");
         if (blueHit == GameEventType.Kill) {
             this.blueAlive = false;
