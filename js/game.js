@@ -13,6 +13,14 @@ var GamePlayerState;
     GamePlayerState[GamePlayerState["Alive"] = 1] = "Alive";
     GamePlayerState[GamePlayerState["Dead"] = 2] = "Dead";
 })(GamePlayerState || (GamePlayerState = {}));
+var AirplanesSrcs = ['img/avion-up.png', 'img/avion-down.png', 'img/avion-left.png', 'img/avion-right.png'];
+var AirplaneOrientation;
+(function (AirplaneOrientation) {
+    AirplaneOrientation[AirplaneOrientation["Up"] = 0] = "Up";
+    AirplaneOrientation[AirplaneOrientation["Down"] = 1] = "Down";
+    AirplaneOrientation[AirplaneOrientation["Left"] = 2] = "Left";
+    AirplaneOrientation[AirplaneOrientation["Right"] = 3] = "Right";
+})(AirplaneOrientation || (AirplaneOrientation = {}));
 function InitGame(info) {
     var game = new Game;
     game.info = info;
@@ -33,6 +41,7 @@ function ResizeGame() {
 var Game = (function () {
     function Game() {
         this.airplanePosition = { x: 0, y: 0 };
+        this.airplaneOrientation = AirplaneOrientation.Up;
         this.gamePlayerState = GamePlayerState.Initial;
         this.gameEvents = new GameEventsMock;
     }
@@ -58,18 +67,13 @@ var Game = (function () {
         game.enemyHitX = new Image();
         game.gamePlayerState = GamePlayerState.Initial;
         game.bgImage.src = 'img/dot.png';
-        game.airplaneImage.src = 'img/avion.png';
+        game.airplaneImage.src = AirplanesSrcs[AirplaneOrientation.Up];
         game.hoverGridImage.src = 'img/dot-hover.png';
         game.killX.src = 'img/plane-kill.png';
         game.missX.src = 'img/gray-x.png';
         game.hitX.src = 'img/plane-hit.png';
         game.enemyMissX.src = 'img/enemy-hit.png';
         game.enemyHitX.src = 'img/enemy-damage.png';
-        game.killX.crossOrigin = "Anonymous";
-        game.missX.crossOrigin = "Anonymous";
-        game.hitX.crossOrigin = "Anonymous";
-        game.enemyMissX.crossOrigin = "Anonymous";
-        game.enemyHitX.crossOrigin = "Anonymous";
         // Handlers
         game.bgImage.onload = function () {
             // Draw grid manually (needs to be done manually for scaling)
@@ -106,6 +110,25 @@ var Game = (function () {
                 // Player is dead, do nothing?
                 alert("Game Over");
             }
+        }, false);
+        document.addEventListener('keyup', function (evt) {
+            var key = evt.keyCode;
+            if (game.gamePlayerState == GamePlayerState.Initial && key == 82) {
+                if (game.airplaneOrientation == AirplaneOrientation.Up) {
+                    game.airplaneOrientation = AirplaneOrientation.Left;
+                }
+                else if (game.airplaneOrientation == AirplaneOrientation.Left) {
+                    game.airplaneOrientation = AirplaneOrientation.Down;
+                }
+                else if (game.airplaneOrientation == AirplaneOrientation.Down) {
+                    game.airplaneOrientation = AirplaneOrientation.Right;
+                }
+                else if (game.airplaneOrientation == AirplaneOrientation.Right) {
+                    game.airplaneOrientation = AirplaneOrientation.Up;
+                }
+            }
+            game.airplaneImage = new Image();
+            game.airplaneImage.src = AirplanesSrcs[game.airplaneOrientation];
         }, false);
     };
     Game.prototype.GetGridPos = function (mousePos) {
