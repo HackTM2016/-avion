@@ -95,14 +95,26 @@
         
     </div>
     
-    <div id="canvasesForm" width="auto" height="auto" style="position: relative; display:none;">
-        <div>
-            <canvas id="canvasLayer0" width="auto" height="auto" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
-            <canvas id="canvasLayer1" width="auto" height="auto" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+    <div id="canvasesForm" height="auto" style="position: relative; display:none;">
+        <div width="100%">
+        	<table style="min-width:320px;" align="center">
+            	<tr>
+                	<td><font class="usernameVS" id="ion" style="font-weight:bold;">Ion</font></td>
+                    <td><font class="usernameVS" id="blue" style="font-weight:bold;">Blue</font></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><font class="username" id="status" style="aligned: center;" >Place your airplane.</font></td>
+                </tr>
+            </table>
+        		
+                    	<div>
+        				<canvas id="canvasLayer0" width="auto" height="auto" style="position:absolute; left:0; top:100px;"></canvas>
+            			<canvas id="canvasLayer1" width="auto" height="auto" style="position:absolute; left:0; top:100px;"></canvas>
+                        </div>
+                	
+            
         </div>
-        <font class="username" id="ion" style="aligned: left">Ion</font><br>
-        <font class="username" id="blue" style="aligned: left">Blue</font><br>
-        <font class="username" id="status" style="aligned: left">Place your airplane.</font><br>
+       
     </div>
 </body>
 
