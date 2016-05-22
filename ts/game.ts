@@ -27,7 +27,7 @@ enum AirplaneOrientation {
     Right
 }
 
-function InitGame(info: Lobby) : void {
+function InitGame(info: Lobby): void {
     var game = new Game
     game.info = info
     game.Init()
@@ -75,6 +75,8 @@ class Game {
     info: Lobby
     gameEvents: GameEvents = new GameEventsMock
 
+    hitHistory: any;
+
     Init() {
         var game = this
         globalGame = this
@@ -117,6 +119,8 @@ class Game {
         game.enemyMissX.src = 'img/enemy-hit.png';
         game.enemyHitX.src = 'img/enemy-damage.png';
 
+        game.hitHistory = [];
+
         // Handlers
         game.bgImage.onload = function () {
             // Draw grid manually (needs to be done manually for scaling)
@@ -151,8 +155,8 @@ class Game {
                 // Clear, forgot why I added this
                 game.contextLayer1.clearRect(0, 0, game.canvasLayer1.width, game.canvasLayer1.height);
 
-                
-                
+
+
                 game.contextLayer1.drawImage(game.airplaneImage, 0, 0, // image, offsetX, offsetY
                     PLANE_WIDTH, PLANE_HEIGHT, // width, height
                     game.airplanePosition.x * tileSize, game.airplanePosition.y * tileSize,   // canvasOffsetX, canvasOffsetY
@@ -167,17 +171,17 @@ class Game {
             }
 
         }, false);
-        
+
         document.addEventListener('keyup', function (evt) {
             var key = evt.keyCode;
             if (game.gamePlayerState == GamePlayerState.Initial && key == 82) {
-                if(game.airplaneOrientation == AirplaneOrientation.Up){
+                if (game.airplaneOrientation == AirplaneOrientation.Up) {
                     game.airplaneOrientation = AirplaneOrientation.Left
-                }else if(game.airplaneOrientation == AirplaneOrientation.Left){
+                } else if (game.airplaneOrientation == AirplaneOrientation.Left) {
                     game.airplaneOrientation = AirplaneOrientation.Down
-                }else if(game.airplaneOrientation == AirplaneOrientation.Down){
+                } else if (game.airplaneOrientation == AirplaneOrientation.Down) {
                     game.airplaneOrientation = AirplaneOrientation.Right
-                }else if(game.airplaneOrientation == AirplaneOrientation.Right){
+                } else if (game.airplaneOrientation == AirplaneOrientation.Right) {
                     game.airplaneOrientation = AirplaneOrientation.Up
                 }
             }
@@ -222,14 +226,20 @@ class Game {
     }
 
     shotResponse(coord: vec2, type: GameEventType, playerName: string): void {
-        if (type == GameEventType.Hit) {
-            this.drawTileImage(this.contextLayer1, this.hitX, coord)
-        }
-        else if (type == GameEventType.Kill) {
-            this.drawTileImage(this.contextLayer1, this.killX, coord)
-        }
-        else {
-            this.drawTileImage(this.contextLayer1, this.missX, coord)
+        if (!(this.hitHistory[coord.x + ";" + coord.y]) || this.hitHistory[coord.x + ";" + coord.y] < type) {
+
+            this.hitHistory[coord.x + ";" + coord.y] = type;
+
+
+            if (type == GameEventType.Hit) {
+                this.drawTileImage(this.contextLayer1, this.hitX, coord)
+            }
+            else if (type == GameEventType.Kill) {
+                this.drawTileImage(this.contextLayer1, this.killX, coord)
+            }
+            else {
+                this.drawTileImage(this.contextLayer1, this.missX, coord)
+            }
         }
     }
     onAttack(coord: vec2, playerName: string): GameEventType {
@@ -246,7 +256,9 @@ class Game {
                 this.drawTileImage(this.contextLayer1, this.enemyHitX, coord);
                 break;
             case GameEventType.Miss:
-                this.drawTileImage(this.contextLayer1, this.enemyMissX, coord);
+                if (!(this.hitHistory[coord.x + ";" + coord.y])) {                
+                    this.drawTileImage(this.contextLayer1, this.enemyMissX, coord);
+                }
             default:
                 break;
         }
@@ -256,20 +268,20 @@ class Game {
     onPlayerDrop(playerName: string): void {
 
     }
-    status : GameStatusType = GameStatusType.Playing
+    status: GameStatusType = GameStatusType.Playing
     onGameChange(status: GameStatusType): void {
         this.gamePlayerState = GamePlayerState.Dead
         this.endGame()
     }
-    
-    endGame() : void {
-        if(this.status == GameStatusType.OverSuccess || this.status == GameStatusType.Playing) {
+
+    endGame(): void {
+        if (this.status == GameStatusType.OverSuccess || this.status == GameStatusType.Playing) {
             alert("You win!");
         }
-        else if(this.status == GameStatusType.OverLost) {
+        else if (this.status == GameStatusType.OverLost) {
             alert("Game Over!");
         }
-        else if(this.status == GameStatusType.Disconnected) {
+        else if (this.status == GameStatusType.Disconnected) {
             alert("Disconnected!");
         }
     }
