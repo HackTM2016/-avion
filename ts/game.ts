@@ -157,7 +157,7 @@ class Game {
             var gridClick = game.GetGridPos({ x: evt.clientX, y: evt.clientY });
             
             if(!validateDeployPosition(gridClick) && game.gamePlayerState == GamePlayerState.Initial){
-                alert("Wrong position for the airplane!")
+                StatusMessage("Wrong position for the airplane!")
                 return
             }
 
@@ -248,6 +248,7 @@ class Game {
         }
         else if (type == GameEventType.Kill) {
             this.drawTileImage(this.contextLayer1, this.killX, coord)
+            StatusMessage(playerName+" is out")
         }
         else {
             this.drawTileImage(this.contextLayer1, this.missX, coord)
@@ -283,13 +284,13 @@ class Game {
     
     endGame() : void {
         if(this.status == GameStatusType.OverSuccess || this.status == GameStatusType.Playing) {
-            alert("You win!");
+            StatusMessage("You win!");
         }
         else if(this.status == GameStatusType.OverLost) {
-            alert("Game Over!");
+            StatusMessage("Game Over!");
         }
         else if(this.status == GameStatusType.Disconnected) {
-            alert("Disconnected!");
+            StatusMessage("Disconnected!");
         }
     }
 }
