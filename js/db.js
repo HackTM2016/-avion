@@ -5,7 +5,7 @@
 var GlobalFB = (function () {
     function GlobalFB() {
     }
-    GlobalFB.dataRef = new Firebase('https://project-4810418174258671406.firebaseio.com/');
+    GlobalFB.dataRef = new Firebase('https://incandescent-fire-3223.firebaseio.com/avion/');
     GlobalFB.curPlayer = null;
     GlobalFB.curLobby = null;
     GlobalFB.lobbyRef = null;
@@ -26,10 +26,7 @@ var PlayerAuthFB = (function () {
         }
         GlobalFB.curPlayer = new Player();
         GlobalFB.curPlayer = { name: name, status: PlayerStatus.new, room: null };
-<<<<<<< HEAD
-=======
         GlobalFB.playerRef = GlobalFB.dataRef.child("Players").child(name);
->>>>>>> 0718999b385e93dc6627deced2718edb406c4fd8
         this.callback = callback;
         GlobalFB.playerRef.transaction(function (old_snapshot) {
             // If user does not exist, add it
@@ -49,13 +46,7 @@ var PlayerAuthFB = (function () {
         // Go offline to break all connections
         // Create new connection to start all over (goOnline it will recreate all observers)
         GlobalFB.curPlayer = null;
-<<<<<<< HEAD
-        Firebase.goOffline();
-        GlobalFB.dataRef = new Firebase('https://project-4810418174258671406.firebaseio.com/');
-        this.playerRef = GlobalFB.dataRef.child("Players");
-=======
         GlobalFB.playerRef.remove();
->>>>>>> 0718999b385e93dc6627deced2718edb406c4fd8
     };
     PlayerAuthFB.prototype.onCommit = function (err, commited, snapshot) {
         if (err || !commited) {

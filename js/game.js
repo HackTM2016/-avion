@@ -74,14 +74,6 @@ var Game = (function () {
         game.hitX.src = 'img/plane-hit.png';
         game.enemyMissX.src = 'img/enemy-hit.png';
         game.enemyHitX.src = 'img/enemy-damage.png';
-<<<<<<< HEAD
-=======
-        game.killX.crossOrigin = "Anonymous";
-        game.missX.crossOrigin = "Anonymous";
-        game.hitX.crossOrigin = "Anonymous";
-        game.enemyMissX.crossOrigin = "Anonymous";
-        game.enemyHitX.crossOrigin = "Anonymous";
->>>>>>> 0718999b385e93dc6627deced2718edb406c4fd8
         // Handlers
         game.bgImage.onload = function () {
             // Draw grid manually (needs to be done manually for scaling)
@@ -162,24 +154,6 @@ var Game = (function () {
             context.drawImage(image, 0, 0, originalTileSize, originalTileSize, tileSize * gridPos.x, tileSize * gridPos.y, tileSize, tileSize);
         }
     };
-    Game.prototype.judgeHit = function (hitCoord) {
-        var actualHitCoord = { x: hitCoord.x * tileSize, y: hitCoord.y * tileSize };
-        // Get the pixel color from Layer1
-        var pixelData = this.contextLayer1.getImageData(actualHitCoord.x, actualHitCoord.y, 1, 1).data;
-        // Pixel data is RGBA, 8bpp
-        var alpha = pixelData[3];
-        if (alpha <= 127) {
-            return GameEventType.Miss;
-        }
-        else {
-            if (alpha < 255) {
-                return GameEventType.Kill;
-            }
-            else {
-                return GameEventType.Hit;
-            }
-        }
-    };
     Game.prototype.shotResponse = function (coord, type, playerName) {
         if (type == GameEventType.Hit) {
             this.drawTileImage(this.contextLayer1, this.hitX, coord);
@@ -192,11 +166,7 @@ var Game = (function () {
         }
     };
     Game.prototype.onAttack = function (coord, playerName) {
-<<<<<<< HEAD
-        var type = this.judgeHit(coord);
-=======
         var type = JudgeHit(coord, this.airplanePosition);
->>>>>>> 0718999b385e93dc6627deced2718edb406c4fd8
         switch (type) {
             case GameEventType.Hit:
             case GameEventType.Kill:
