@@ -196,24 +196,6 @@ class Game {
         }
     }
 
-    judgeHit(hitCoord: vec2, planeCoord: vec2): GameEventType {
-
-        if (hitCoord.x >= planeCoord.x && hitCoord.x < (planeCoord.x + 5) &&
-            hitCoord.y >= planeCoord.y && hitCoord.y < (planeCoord.y + 4)) {
-
-            var planeShape =   [[0, 0, 2, 0, 0],
-                                [1, 1, 1, 1, 1],
-                                [0, 0, 1, 0, 0],
-                                [0, 1, 1, 1, 0]];
-
-            var detailHitCoord = { x: hitCoord.x - planeCoord.x, y: hitCoord.y - planeCoord.y };
-            
-            return planeShape[detailHitCoord.y][detailHitCoord.x];
-        }
-        
-        return GameEventType.Miss;
-    }
-
     shotResponse(coord: vec2, type: GameEventType, playerName: string): void {
         if (type == GameEventType.Hit) {
             this.drawTileImage(this.contextLayer1, this.hitX, coord)
@@ -226,7 +208,7 @@ class Game {
         }
     }
     onAttack(coord: vec2, playerName: string): GameEventType {
-        var type: GameEventType = this.judgeHit(coord, this.airplanePosition);
+        var type: GameEventType = JudgeHit(coord, this.airplanePosition);
 
         switch (type) {
             case GameEventType.Hit:
